@@ -1,0 +1,20 @@
+{
+  "name": "protractor-tests",
+  "version": "0.0.1",
+  "devDependencies": {
+    "protractor": "0.21.0",
+    "grunt": "^0.4.4",
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-ngmin": "0.0.3",
+    "grunt-contrib-uglify": "^0.4.0",
+    "load-grunt-tasks": "^0.4.0",
+    "grunt-contrib-clean": "^0.5.0",
+    "time-grunt": "^0.3.1"
+  },
+  "scripts": {
+    "install": "./node_modules/protractor/bin/webdriver-manager update"
+  },
+  "dependencies": {
+    "cassowary": "0.0.2"
+  }
+}
