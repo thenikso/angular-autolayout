@@ -5,12 +5,14 @@ describe('Angular Autolayout', function() {
 
 	var autolayout = null;
 	var $rootElement = null;
+	var cassowary = null;
 
 	beforeEach(function() {
 		module('autolayout');
-		inject(function(_autolayout_, _$rootElement_) {
+		inject(function(_autolayout_, _$rootElement_, _cassowary_) {
 			autolayout = _autolayout_;
 			$rootElement = _$rootElement_;
+			cassowary = _cassowary_;
 		});
 	});
 
@@ -132,13 +134,14 @@ describe('Angular Autolayout', function() {
 
 			it('should build a proper constraint', function() {
 				var c = null;
-				var faSpy = sinon.spy();
+				var faSpy = sinon.stub().returns(function() {});
+				var rbSpy = sinon.stub().returns(new cassowary.Equation(0, 0));
 				expect(function() {
 					c = al.addConstraint({
 						fromElement: elA,
 						fromAttribute: faSpy,
 						toAttribute: 'right',
-						relatedBy: 'equal'
+						relatedBy: rbSpy
 					})
 				}).not.to.
 				throw ();
@@ -146,6 +149,23 @@ describe('Angular Autolayout', function() {
 				expect(c.fromElement).to.equal(elA);
 				expect(c.toElement).to.equal(containerElement);
 				expect(faSpy.called).to.be.true;
+				expect(rbSpy.called).to.be.true;
+			});
+
+			it('should throw if applying constraints to non-direct child elements', function() {
+				var elNested = angular.element('<div></div>');
+				elA.append(elNested);
+				expect(function() {
+					al.addConstraint({
+						fromElement: elA,
+						fromAttribute: 'right',
+						toElement: elNested,
+						toAttribute: 'left',
+						relatedBy: 'equal',
+						constant: 20
+					});
+				}).to.
+				throw ();
 			});
 
 			it('should not apply constriants if element is not in the document', function() {
@@ -162,6 +182,29 @@ describe('Angular Autolayout', function() {
 				});
 				expect(elA.css('left')).to.equal('');
 				expect(elB.css('left')).to.equal('');
+			});
+
+			it('should materialize constraint', function() {
+				expect(elA[0].offsetLeft).to.equal(0);
+				expect(elA[0].offsetWidth).to.equal(10);
+				expect(elB[0].offsetLeft).to.equal(0);
+				expect(elB[0].offsetWidth).to.equal(10);
+				expect(elA.css('left')).to.equal('');
+				expect(elB.css('left')).to.equal('');
+				al.addConstraint({
+					fromElement: elA,
+					fromAttribute: 'right',
+					toElement: elB,
+					toAttribute: 'left',
+					relatedBy: 'equal',
+					constant: -20
+				});
+				expect(elA[0].offsetLeft).to.equal(0);
+				expect(elA[0].offsetWidth).to.equal(10);
+				expect(elB[0].offsetLeft).to.equal(30);
+				expect(elB[0].offsetWidth).to.equal(10);
+				expect(elA.css('left')).to.equal('0px');
+				expect(elB.css('left')).to.equal('30px');
 			});
 
 		});

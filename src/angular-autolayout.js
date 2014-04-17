@@ -12,6 +12,8 @@
 
 		var provider = this;
 
+		provider.defaultPriority = 1000;
+
 		provider.relations = {
 			equal: function(a, b, priority) {
 				return new c.Equation(a, b, c.Strength.medium, priority || 0)
@@ -93,8 +95,8 @@
 			},
 			right: {
 				create: function(el) {
-					var leftCtx = Autolayout.attribute.left(el);
-					var widthCtx = Autolayout.attribute.width(el);
+					var leftCtx = provider.contextCreatorForElementAttribute(el, 'left');
+					var widthCtx = provider.contextCreatorForElementAttribute(el, 'width');
 					var ctx = function(solver) {
 						leftCtx(solver);
 						widthCtx(solver);
@@ -104,14 +106,14 @@
 					return ctx
 				},
 				materialize: function(el, ctx) {
-					Autolayout.attribute.left(el, ctx);
-					Autolayout.attribute.width(el, ctx);
+					provider.materializeContext(el, 'left', ctx);
+					provider.materializeContext(el, 'width', ctx);
 				}
 			},
 			bottom: {
 				create: function(el) {
-					var leftCtx = Autolayout.attribute.top(el);
-					var widthCtx = Autolayout.attribute.height(el);
+					var leftCtx = provider.contextCreatorForElementAttribute(el, 'top');
+					var widthCtx = provider.contextCreatorForElementAttribute(el, 'height');
 					var ctx = function(solver) {
 						leftCtx(solver);
 						widthCtx(solver);
@@ -121,10 +123,41 @@
 					return ctx
 				},
 				materialize: function(el, ctx) {
-					Autolayout.attribute.top(el, ctx);
-					Autolayout.attribute.height(el, ctx);
+					provider.materializeContext(el, 'top', ctx);
+					provider.materializeContext(el, 'height', ctx);
 				},
 			}
+		};
+
+		provider.contextCreatorForElementAttribute = function(el, prop) {
+			var creator = provider.attributeConverters[prop];
+			if (!creator || !creator.create) {
+				throw new Error("Unknown attribute converter for: " + prop);
+			}
+			creator = creator.create;
+			el = angular.element(el);
+			// Get or create `$autolayoutContexts` object
+			var ctxs = el.data('$autolayoutContexts');
+			if (!angular.isObject(ctxs)) {
+				ctxs = {};
+				el.data('$autolayoutContexts', ctxs);
+			}
+			// Return cached context if present
+			ctx = ctxs[prop];
+			if (angular.isDefined(ctx)) {
+				return ctx;
+			}
+			// Generate autlayout context for property variable
+			return ctxs[prop] = ctx = creator(el);
+		};
+
+		provider.materializeContext = function(el, prop, ctx) {
+			var materializer = provider.attributeConverters[prop];
+			if (!materializer || !materializer.materialize) {
+				throw new Error("Unknown attribute converter for: " + prop);
+			}
+			materializer = materializer.materialize;
+			return materializer(el, ctx);
 		};
 
 		function Autolayout(container) {
@@ -138,14 +171,14 @@
 			} else {
 				this.containerElement.data('$autolayout', this);
 			}
-		}
-
-		var getAttributeContext = function(prop, el) {
-			var creator = provider.attributeConverters[prop];
-			if (!creator) {
-				throw new Error("Unknown attribute converter for: " + prop);
+			this.solver = new c.SimplexSolver();
+			this.constraints = [];
+			// Position container element to be the offset parent
+			var position = this.containerElement.css('position');
+			if (position != 'absolute' || position != 'relative' || position != 'fixed') {
+				this.containerElement.css('position', 'relative');
 			}
-		};
+		}
 
 		Autolayout.prototype.addConstraint = function(constraint) {
 			if (!angular.isObject(constraint)) {
@@ -162,14 +195,72 @@
 			}
 			constraint = angular.extend({}, constraint);
 			constraint.fromElement = angular.element(constraint.fromElement || this.containerElement);
-			constraint.fromContext = angular.isFunction(constraint.fromAttribute) ? constraint.fromAttribute(constraint.fromElement) : getAttributeContext(constraint.fromAttribute, constraint.fromElement);
+			if (constraint.fromElement[0] != this.containerElement[0] && constraint.fromElement[0].parentNode != this.containerElement[0]) {
+				throw new Error("The fromElement: " + constraint.fromElement[0] + " should be a direct child of: " + this.containerElement[0]);
+			}
+			constraint.fromElement.css('position', 'absolute');
+			constraint.fromContext = angular.isFunction(constraint.fromAttribute) ? constraint.fromAttribute(constraint.fromElement) : provider.contextCreatorForElementAttribute(constraint.fromElement, constraint.fromAttribute);
 			constraint.toElement = angular.element(constraint.toElement || this.containerElement);
-			constraint.toContext = angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(constraint.toElement) : getAttributeContext(constraint.toAttribute, constraint.toElement);
-			var relatedBy = provider.relations[constraint.relatedBy];
+			if (constraint.toElement[0] != this.containerElement[0] && constraint.toElement[0].parentNode != this.containerElement[0]) {
+				throw new Error("The toElement: " + constraint.toElement[0] + " should be a direct child of: " + this.containerElement[0]);
+			}
+			constraint.toElement.css('position', 'absolute');
+			constraint.toContext = angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(constraint.toElement) : provider.contextCreatorForElementAttribute(constraint.toElement, constraint.toAttribute);
+			var relatedBy = angular.isFunction(constraint.relatedBy) ? constraint.relatedBy : provider.relations[constraint.relatedBy];
 			if (!relatedBy) {
 				throw new Error("Unknown relation: " + constraint.relatedBy);
 			}
-			constraint.relatedBy = relatedBy;
+			constraint.relatedByFactory = relatedBy;
+			constraint.$constraint = constraint.relatedByFactory(
+				constraint.fromContext(this.solver),
+				c.plus(c.times(constraint.toContext(this.solver), constraint.multiplier || 1), constraint.constant || 0),
+				constraint.priority || provider.defaultPriority
+			);
+			if (!constraint.$constraint) {
+				throw new Error("Unable to create constraint with parameters: " + constraint);
+			}
+			this.solver.addConstraint(constraint.$constraint);
+			this.constraints.push(constraint);
+			this.materialize();
+			return constraint;
+		};
+
+		Autolayout.prototype.materialize = function() {
+			// Materialize only if container element is in the document
+			var shouldContinue = false;
+			var element = this.containerElement[0];
+			while (element = element.parentNode) {
+				if (element == document) {
+					shouldContinue = true;
+					break;
+				}
+			}
+			if (!shouldContinue) {
+				return;
+			}
+			//
+			var constraint;
+			for (var i = this.constraints.length - 1; i >= 0; i--) {
+				constraint = this.constraints[i];
+
+				angular.isFunction(constraint.fromAttribute) ? constraint.fromAttribute(
+					constraint.fromElement,
+					constraint.fromContext
+				) : provider.materializeContext(
+					constraint.fromElement,
+					constraint.fromAttribute,
+					constraint.fromContext
+				);
+
+				angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(
+					constraint.toElement,
+					constraint.toContext
+				) : provider.materializeContext(
+					constraint.toElement,
+					constraint.toAttribute,
+					constraint.toContext
+				);
+			};
 		};
 
 		provider.$get = ['$rootElement',
