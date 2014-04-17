@@ -131,6 +131,12 @@
 				return new Autolayout(container);
 			}
 			this.containerElement = angular.element(container || Autolayout.$rootElement);
+			var instance = this.containerElement.data('$autolayout');
+			if (instance instanceof Autolayout) {
+				return instance;
+			} else {
+				this.containerElement.data('$autolayout', this);
+			}
 			this.scope = this.containerElement.scope() || Autolayout.$rootScope;
 		}
 

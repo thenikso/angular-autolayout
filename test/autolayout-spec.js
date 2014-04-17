@@ -41,7 +41,14 @@ describe('Angular Autolayout', function() {
 		expect(a.scope).to.equal($rootScope);
 	});
 
-	describe('when defined on an element', function() {
+	it('should not initialize twice if assigned multiple times to the same element', function() {
+		var el = angular.element('<div></div>');
+		var scope = $rootScope.$new(true);
+		$compile(el)(scope);
+		var a = autolayout(el);
+		var b = autolayout(el);
+		expect(b).to.equal(a);
+	});
 
 		var containerElement = null;
 		var containerElementScope = null;
