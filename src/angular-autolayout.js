@@ -139,6 +139,13 @@
 			}
 		}
 
+		var getAttributeContext = function(prop, el) {
+			var creator = provider.attributeConverters[prop];
+			if (!creator) {
+				throw new Error("Unknown attribute converter for: " + prop);
+			}
+		};
+
 		Autolayout.prototype.addConstraint = function(constraint) {
 			if (!angular.isObject(constraint)) {
 				throw new Error("A constraint object argument is required.");
@@ -152,6 +159,11 @@
 			if (!constraint.relatedBy) {
 				throw new Error("A relatedBy parameter is required.");
 			}
+			constraint = angular.extend({}, constraint);
+			constraint.fromElement = angular.element(constraint.fromElement || this.containerElement);
+			constraint.fromContext = angular.isFunction(constraint.fromAttribute) ? constraint.fromAttribute(constraint.fromElement) : getAttributeContext(constraint.fromAttribute, constraint.fromElement);
+			constraint.toElement = angular.element(constraint.toElement || this.containerElement);
+			constraint.toContext = angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(constraint.toElement) : getAttributeContext(constraint.toAttribute, constraint.toElement);
 		};
 
 		provider.$get = ['$rootElement',

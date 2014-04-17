@@ -18,6 +18,7 @@ module.exports = function(config) {
 			'bower_components/angular/angular.js',
 			'bower_components/angular-mocks/angular-mocks.js',
 			'bower_components/chai/chai.js',
+			'node_modules/sinon/pkg/sinon.js',
 			'src/**/*.js',
 			'test/**/*.js'
 		],

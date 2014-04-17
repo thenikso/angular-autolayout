@@ -78,7 +78,7 @@ describe('Angular Autolayout', function() {
 				containerElement.append(elA).append(elB);
 			});
 
-			it('should throw if addin an invalid constriant', function() {
+			it('should throw if adding a constraint with insufficient options', function() {
 				expect(function() {
 					al.addConstraint({})
 				}).to.
@@ -98,6 +98,45 @@ describe('Angular Autolayout', function() {
 					})
 				}).to.
 				throw ();
+			});
+
+			it('should throw if adding a constraint with invalid options', function() {
+				expect(function() {
+					al.addConstraint({
+						fromElement: elA,
+						fromAttribute: 'INVALID',
+						toAttribute: 'right',
+						relatedBy: 'equal'
+					})
+				}).to.
+				throw ();
+				expect(function() {
+					al.addConstraint({
+						fromElement: elA,
+						fromAttribute: 'left',
+						toAttribute: 'INVALID',
+						relatedBy: 'equal'
+					})
+				}).to.
+				throw ();
+			});
+
+			it('should build a proper constraint', function() {
+				var c = null;
+				var faSpy = sinon.spy();
+				expect(function() {
+					c = al.addConstraint({
+						fromElement: elA,
+						fromAttribute: faSpy,
+						toAttribute: 'right',
+						relatedBy: 'equal'
+					})
+				}).not.to.
+				throw ();
+				expect(c).to.not.be.undefined;
+				expect(c.fromElement).to.equal(elA);
+				expect(c.toElement).to.equal(containerElement);
+				expect(faSpy.called).to.be.true;
 			});
 
 			it('should not apply constriants if element is not in the document', function() {
