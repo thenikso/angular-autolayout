@@ -39,4 +39,15 @@ describe('Angular Autolayout Provider', function() {
 		expect(autolayoutProvider.attributeConverters.bottom).to.not.be.undefined;
 	});
 
+	it('provides a `cassowary` constant', function() {
+		var c = undefined;
+		expect(function() {
+			inject(function(cassowary) {
+				c = cassowary;
+			})
+		}).to.not.
+		throw ();
+		expect(c).to.equal(window.c);
+	});
+
 });

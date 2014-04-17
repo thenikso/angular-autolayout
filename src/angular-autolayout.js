@@ -1,10 +1,11 @@
 (function(context) {
 
-	// Get cassowary constraint solver
-	var c = context.c
-
 	// Define exported module
 	angular.module('autolayout', ['ng']);
+
+	// Expose cassowary
+	var c = context.c;
+	angular.module('autolayout').constant('cassowary', c);
 
 	// Main `autolayout` service
 	angular.module('autolayout').provider('autolayout', function() {
