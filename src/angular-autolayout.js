@@ -9,9 +9,19 @@
 	// Main `autolayout` service
 	angular.module('autolayout').provider('autolayout', function() {
 
+		function Autolayout(container) {
+			if (!(this instanceof Autolayout)) {
+				return new Autolayout(container);
+			}
+			this.containerElement = angular.element(container || Autolayout.$rootElement);
+			this.scope = this.containerElement.scope() || Autolayout.$rootScope;
+		}
+
 		this.$get = ['$rootElement', '$rootScope',
 			function($rootElement, $rootScope) {
-				return null;
+				Autolayout.$rootElement = $rootElement;
+				Autolayout.$rootScope = $rootScope;
+				return Autolayout;
 			}
 		];
 
