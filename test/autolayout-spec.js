@@ -119,6 +119,15 @@ describe('Angular Autolayout', function() {
 					})
 				}).to.
 				throw ();
+				expect(function() {
+					al.addConstraint({
+						fromElement: elA,
+						fromAttribute: 'left',
+						toAttribute: 'right',
+						relatedBy: 'INVALID'
+					})
+				}).to.
+				throw ();
 			});
 
 			it('should build a proper constraint', function() {

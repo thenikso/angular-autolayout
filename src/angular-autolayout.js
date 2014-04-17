@@ -164,6 +164,11 @@
 			constraint.fromContext = angular.isFunction(constraint.fromAttribute) ? constraint.fromAttribute(constraint.fromElement) : getAttributeContext(constraint.fromAttribute, constraint.fromElement);
 			constraint.toElement = angular.element(constraint.toElement || this.containerElement);
 			constraint.toContext = angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(constraint.toElement) : getAttributeContext(constraint.toAttribute, constraint.toElement);
+			var relatedBy = provider.relations[constraint.relatedBy];
+			if (!relatedBy) {
+				throw new Error("Unknown relation: " + constraint.relatedBy);
+			}
+			constraint.relatedBy = relatedBy;
 		};
 
 		provider.$get = ['$rootElement',
