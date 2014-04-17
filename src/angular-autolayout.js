@@ -17,6 +17,12 @@
 			this.scope = this.containerElement.scope() || Autolayout.$rootScope;
 		}
 
+		Autolayout.prototype.addConstraint = function(constraint) {
+			if (!constraint) {
+				throw new Error("A constraint parameter should be defined.");
+			}
+		};
+
 		this.$get = ['$rootElement', '$rootScope',
 			function($rootElement, $rootScope) {
 				Autolayout.$rootElement = $rootElement;

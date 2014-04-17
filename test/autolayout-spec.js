@@ -41,4 +41,25 @@ describe('Angular Autolayout', function() {
 		expect(a.scope).to.equal($rootScope);
 	});
 
+	describe('when defined on an element', function() {
+
+		var containerElement = null;
+		var containerElementScope = null;
+		var a = null;
+
+		beforeEach(function() {
+			containerElement = angular.element('<div></div>');
+			containerElementScope = $rootScope.$new(true);
+			$compile(containerElement)(containerElementScope);
+			a = autolayout(containerElement);
+		});
+
+		it('should throw if adding an empty constraint', function() {
+			expect(a.addConstraint).to.not.be.undefined;
+			expect(a.addConstraint).to.be.a("function");
+			expect(a.addConstraint).to.
+			throw ();
+		});
+	});
+
 });
