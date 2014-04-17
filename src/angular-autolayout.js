@@ -137,7 +137,6 @@
 			} else {
 				this.containerElement.data('$autolayout', this);
 			}
-			this.scope = this.containerElement.scope() || Autolayout.$rootScope;
 		}
 
 		Autolayout.prototype.addConstraint = function(constraint) {
@@ -146,10 +145,9 @@
 			}
 		};
 
-		provider.$get = ['$rootElement', '$rootScope',
-			function($rootElement, $rootScope) {
+		provider.$get = ['$rootElement',
+			function($rootElement) {
 				Autolayout.$rootElement = $rootElement;
-				Autolayout.$rootScope = $rootScope;
 				return Autolayout;
 			}
 		];
