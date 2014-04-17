@@ -39,18 +39,83 @@ describe('Angular Autolayout', function() {
 	describe('when instantiated', function() {
 
 		var containerElement = null;
-		var a = null;
+		var al = null;
 
 		beforeEach(function() {
 			containerElement = angular.element('<div></div>');
-			a = autolayout(containerElement);
+			angular.element(document.body).append(containerElement);
+			al = autolayout(containerElement);
 		});
 
 		it('should throw if adding an empty constraint', function() {
-			expect(a.addConstraint).to.not.be.undefined;
-			expect(a.addConstraint).to.be.a("function");
-			expect(a.addConstraint).to.
+			expect(al.addConstraint).to.not.be.undefined;
+			expect(al.addConstraint).to.be.a("function");
+			expect(al.addConstraint).to.
 			throw ();
+		});
+
+		describe('programmatic API', function() {
+
+			var elA = null;
+			var elB = null;
+
+			beforeEach(function() {
+				containerElement.css({
+					width: '100px',
+					height: '100px',
+					position: 'relative'
+				});
+				elA = angular.element('<div id="a" style="width:10px;height:10px"></div>');
+				elA.css({
+					width: '10px',
+					height: '10px',
+				});
+				elB = angular.element('<div id="b" style="width:10px;height:10px"></div>');
+				elB.css({
+					width: '10px',
+					height: '10px',
+				});
+				containerElement.append(elA).append(elB);
+			});
+
+			it('should throw if addin an invalid constriant', function() {
+				expect(function() {
+					al.addConstraint({})
+				}).to.
+				throw ();
+				expect(function() {
+					al.addConstraint({
+						fromAttribute: 'left',
+						toAttribute: 'right'
+					})
+				}).to.
+				throw ();
+				expect(function() {
+					al.addConstraint({
+						fromElement: elA,
+						fromAttribute: 'left',
+						toAttribute: 'right'
+					})
+				}).to.
+				throw ();
+			});
+
+			it('should not apply constriants if element is not in the document', function() {
+				containerElement.remove();
+				expect(elA.css('left')).to.equal('');
+				expect(elB.css('left')).to.equal('');
+				al.addConstraint({
+					fromElement: elA,
+					fromAttribute: 'right',
+					toElement: elB,
+					toAttribute: 'left',
+					relatedBy: 'equal',
+					constant: 20
+				});
+				expect(elA.css('left')).to.equal('');
+				expect(elB.css('left')).to.equal('');
+			});
+
 		});
 	});
 });

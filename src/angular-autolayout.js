@@ -140,8 +140,17 @@
 		}
 
 		Autolayout.prototype.addConstraint = function(constraint) {
-			if (!constraint) {
-				throw new Error("A constraint parameter should be defined.");
+			if (!angular.isObject(constraint)) {
+				throw new Error("A constraint object argument is required.");
+			}
+			if (!constraint.fromElement && !constraint.toElement) {
+				throw new Error("A from or to element is required.");
+			}
+			if (!constraint.fromAttribute || !constraint.toAttribute) {
+				throw new Error("A fromAttribute and toAttribute are required.");
+			}
+			if (!constraint.relatedBy) {
+				throw new Error("A relatedBy parameter is required.");
 			}
 		};
 
