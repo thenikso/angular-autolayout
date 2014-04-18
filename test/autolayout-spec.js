@@ -264,6 +264,43 @@ describe('Angular Autolayout', function() {
 				expect(elA[0].offsetLeft).to.equal(10);
 				expect(elA[0].offsetWidth).to.equal(80);
 			});
+
+			it('should update constraints when container changes', function() {
+				containerElement.css({
+					position: 'absolute',
+					top: '15px',
+					left: '15px'
+				});
+				expect(containerElement[0].offsetLeft).to.equal(15);
+				expect(containerElement[0].offsetWidth).to.equal(100);
+				expect(elA[0].offsetLeft).to.equal(0);
+				expect(elA[0].offsetWidth).to.equal(10);
+				al.addConstraint({
+					fromElement: null,
+					fromAttribute: 'left',
+					toElement: elA,
+					toAttribute: 'left',
+					relatedBy: 'equal',
+					constant: -10
+				});
+				al.addConstraint({
+					fromElement: elA,
+					fromAttribute: 'width',
+					toElement: null,
+					toAttribute: 'width',
+					relatedBy: 'equal',
+					constant: -20
+				});
+				containerElement.css({
+					width: '200px',
+					height: '200px'
+				});
+				al.update();
+				expect(containerElement[0].offsetLeft).to.equal(15);
+				expect(containerElement[0].offsetWidth).to.equal(200);
+				expect(elA[0].offsetLeft).to.equal(10);
+				expect(elA[0].offsetWidth).to.equal(180);
+			});
 		});
 	});
 });

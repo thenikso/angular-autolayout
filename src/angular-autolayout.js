@@ -303,6 +303,29 @@
 			};
 		};
 
+		Autolayout.prototype.update = function() {
+			var ctxs = this.containerElement.data('$autolayoutContexts');
+			var updater;
+			var didEdit = false;
+			var el = this.containerElement[0];
+			for (prop in ctxs) {
+				updater = provider.attributeConverters[prop];
+				if (!updater || !updater.update) {
+					continue;
+				}
+				if (!didEdit) {
+					didEdit = true;
+					this.solver.beginEdit();
+				}
+				updater.update(el, ctxs[prop], this.solver);
+			}
+			if (didEdit) {
+				this.solver.resolve();
+				this.solver.endEdit();
+				this.materialize();
+			}
+		};
+
 		provider.$get = ['$rootElement',
 			function($rootElement) {
 				Autolayout.$rootElement = $rootElement;
