@@ -57,8 +57,9 @@ describe('Angular Autolayout Provider', function() {
 	it('should cache contexts with `contextCreatorForElementAttribute`', function() {
 		expect(autolayoutProvider.contextCreatorForElementAttribute).to.be.a("function");
 		var el = angular.element('<div></div>');
-		var c1 = autolayoutProvider.contextCreatorForElementAttribute(el, 'left');
-		var c2 = autolayoutProvider.contextCreatorForElementAttribute(el, 'left');
+		var rel = angular.element('<div></div>').append(el);
+		var c1 = autolayoutProvider.contextCreatorForElementAttribute('left', el, rel);
+		var c2 = autolayoutProvider.contextCreatorForElementAttribute('left', el, rel);
 		expect(c1).to.equal(c2);
 	});
 
@@ -69,7 +70,7 @@ describe('Angular Autolayout Provider', function() {
 			materialize: spy
 		};
 		var el = {}, ctx = {};
-		autolayoutProvider.materializeContext(el, 'test', ctx);
+		autolayoutProvider.materializeContext('test', el, ctx);
 		expect(spy.calledWith(el, ctx)).to.be.true;
 	});
 });

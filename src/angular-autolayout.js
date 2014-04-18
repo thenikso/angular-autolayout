@@ -28,12 +28,16 @@
 
 		provider.attributeConverters = {
 			top: {
-				create: function(el) {
+				create: function(el, contEl) {
+					var top = el.getBoundingClientRect().top - contEl.getBoundingClientRect().top;
 					var ctx = function(solver) {
+						if (el == contEl) {
+							solver.addStay(ctx.top);
+						}
 						return ctx.top;
 					};
 					ctx.top = new c.Variable({
-						value: el[0].offsetTop
+						value: top
 					});
 					return ctx;
 				},
@@ -43,12 +47,16 @@
 				}
 			},
 			left: {
-				create: function(el) {
+				create: function(el, contEl) {
+					var left = el.getBoundingClientRect().left - contEl.getBoundingClientRect().left;
 					var ctx = function(solver) {
+						if (el == contEl) {
+							solver.addStay(ctx.left);
+						}
 						return ctx.left;
 					};
 					ctx.left = new c.Variable({
-						value: el[0].offsetLeft
+						value: left
 					});
 					return ctx;
 				},
@@ -58,11 +66,15 @@
 				}
 			},
 			width: {
-				create: function(el) {
-					var initialWidth = el[0].offsetWidth;
+				create: function(el, contEl) {
+					var initialWidth = el.getBoundingClientRect().width;
 					var ctx = function(solver) {
-						solver.addConstraint(new c.Inequality(ctx.width, c.GEQ, 0, c.Strength.required));
-						solver.addConstraint(new c.Inequality(ctx.width, c.GEQ, initialWidth, c.Strength.weak));
+						if (el == contEl) {
+							solver.addStay(ctx.width).addEditVar(ctx.width);
+						} else {
+							solver.addConstraint(new c.Inequality(ctx.width, c.GEQ, 0, c.Strength.required));
+							solver.addConstraint(new c.Inequality(ctx.width, c.GEQ, initialWidth, c.Strength.weak));
+						}
 						return ctx.width;
 					};
 					ctx.width = new c.Variable({
@@ -70,17 +82,24 @@
 					});
 					return ctx;
 				},
+				update: function(contEl, ctx, solver) {
+					solver.suggestValue(ctx.width, contEl.getBoundingClientRect().width);
+				},
 				materialize: function(el, ctx) {
 					console.log(el, 'width', ctx.width.value + 'px');
 					el.css('width', ctx.width.value + 'px');
 				}
 			},
 			height: {
-				create: function(el) {
-					var initialHeight = el[0].offsetHeight;
+				create: function(el, contEl) {
+					var initialHeight = el.getBoundingClientRect().height;
 					var ctx = function(solver) {
-						solver.addConstraint(new c.Inequality(ctx.height, c.GEQ, 0, c.Strength.required));
-						solver.addConstraint(new c.Inequality(ctx.height, c.GEQ, initialHeight, c.Strength.weak));
+						if (el == contEl) {
+							solver.addStay(ctx.height).addEditVar(ctx.height);
+						} else {
+							solver.addConstraint(new c.Inequality(ctx.height, c.GEQ, 0, c.Strength.required));
+							solver.addConstraint(new c.Inequality(ctx.height, c.GEQ, initialHeight, c.Strength.weak));
+						}
 						return ctx.height;
 					};
 					ctx.height = new c.Variable({
@@ -88,15 +107,18 @@
 					});
 					return ctx;
 				},
+				update: function(contEl, ctx, solver) {
+					solver.suggestValue(ctx.height, contEl.getBoundingClientRect().height);
+				},
 				materialize: function(el, ctx) {
 					console.log(el, 'height', ctx.height.value + 'px');
 					el.css('height', ctx.height.value + 'px');
 				}
 			},
 			right: {
-				create: function(el) {
-					var leftCtx = provider.contextCreatorForElementAttribute(el, 'left');
-					var widthCtx = provider.contextCreatorForElementAttribute(el, 'width');
+				create: function(el, contEl) {
+					var leftCtx = provider.contextCreatorForElementAttribute('left', el, contEl);
+					var widthCtx = provider.contextCreatorForElementAttribute('width', el, contEl);
 					var ctx = function(solver) {
 						leftCtx(solver);
 						widthCtx(solver);
@@ -106,14 +128,14 @@
 					return ctx
 				},
 				materialize: function(el, ctx) {
-					provider.materializeContext(el, 'left', ctx);
-					provider.materializeContext(el, 'width', ctx);
+					provider.materializeContext('left', el, ctx);
+					provider.materializeContext('width', el, ctx);
 				}
 			},
 			bottom: {
-				create: function(el) {
-					var leftCtx = provider.contextCreatorForElementAttribute(el, 'top');
-					var widthCtx = provider.contextCreatorForElementAttribute(el, 'height');
+				create: function(el, contEl) {
+					var leftCtx = provider.contextCreatorForElementAttribute('top', el, contEl);
+					var widthCtx = provider.contextCreatorForElementAttribute('height', el, contEl);
 					var ctx = function(solver) {
 						leftCtx(solver);
 						widthCtx(solver);
@@ -123,19 +145,20 @@
 					return ctx
 				},
 				materialize: function(el, ctx) {
-					provider.materializeContext(el, 'top', ctx);
-					provider.materializeContext(el, 'height', ctx);
+					provider.materializeContext('top', el, ctx);
+					provider.materializeContext('height', el, ctx);
 				},
 			}
 		};
 
-		provider.contextCreatorForElementAttribute = function(el, prop) {
+		provider.contextCreatorForElementAttribute = function(prop, el, contEl) {
 			var creator = provider.attributeConverters[prop];
 			if (!creator || !creator.create) {
 				throw new Error("Unknown attribute converter for: " + prop);
 			}
 			creator = creator.create;
 			el = angular.element(el);
+			contEl = angular.element(contEl);
 			// Get or create `$autolayoutContexts` object
 			var ctxs = el.data('$autolayoutContexts');
 			if (!angular.isObject(ctxs)) {
@@ -148,10 +171,10 @@
 				return ctx;
 			}
 			// Generate autlayout context for property variable
-			return ctxs[prop] = ctx = creator(el);
+			return ctxs[prop] = ctx = creator(el[0], contEl[0]);
 		};
 
-		provider.materializeContext = function(el, prop, ctx) {
+		provider.materializeContext = function(prop, el, ctx) {
 			var materializer = provider.attributeConverters[prop];
 			if (!materializer || !materializer.materialize) {
 				throw new Error("Unknown attribute converter for: " + prop);
@@ -199,13 +222,25 @@
 				throw new Error("The fromElement: " + constraint.fromElement[0] + " should be a direct child of: " + this.containerElement[0]);
 			}
 			constraint.fromElement.css('position', 'absolute');
-			constraint.fromContext = angular.isFunction(constraint.fromAttribute) ? constraint.fromAttribute(constraint.fromElement) : provider.contextCreatorForElementAttribute(constraint.fromElement, constraint.fromAttribute);
+			constraint.fromContext = angular.isFunction(constraint.fromAttribute) ? constraint.fromAttribute(
+				constraint.fromElement
+			) : provider.contextCreatorForElementAttribute(
+				constraint.fromAttribute,
+				constraint.fromElement,
+				this.containerElement
+			);
 			constraint.toElement = angular.element(constraint.toElement || this.containerElement);
 			if (constraint.toElement[0] != this.containerElement[0] && constraint.toElement[0].parentNode != this.containerElement[0]) {
 				throw new Error("The toElement: " + constraint.toElement[0] + " should be a direct child of: " + this.containerElement[0]);
 			}
 			constraint.toElement.css('position', 'absolute');
-			constraint.toContext = angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(constraint.toElement) : provider.contextCreatorForElementAttribute(constraint.toElement, constraint.toAttribute);
+			constraint.toContext = angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(
+				constraint.toElement
+			) : provider.contextCreatorForElementAttribute(
+				constraint.toAttribute,
+				constraint.toElement,
+				this.containerElement
+			);
 			var relatedBy = angular.isFunction(constraint.relatedBy) ? constraint.relatedBy : provider.relations[constraint.relatedBy];
 			if (!relatedBy) {
 				throw new Error("Unknown relation: " + constraint.relatedBy);
@@ -240,26 +275,31 @@
 			}
 			//
 			var constraint;
+			var containerEl = this.containerElement[0];
 			for (var i = this.constraints.length - 1; i >= 0; i--) {
 				constraint = this.constraints[i];
 
-				angular.isFunction(constraint.fromAttribute) ? constraint.fromAttribute(
-					constraint.fromElement,
-					constraint.fromContext
-				) : provider.materializeContext(
-					constraint.fromElement,
-					constraint.fromAttribute,
-					constraint.fromContext
-				);
+				if (constraint.fromElement[0] != containerEl) {
+					angular.isFunction(constraint.fromAttribute) ? constraint.fromAttribute(
+						constraint.fromElement,
+						constraint.fromContext
+					) : provider.materializeContext(
+						constraint.fromAttribute,
+						constraint.fromElement,
+						constraint.fromContext
+					);
+				}
 
-				angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(
-					constraint.toElement,
-					constraint.toContext
-				) : provider.materializeContext(
-					constraint.toElement,
-					constraint.toAttribute,
-					constraint.toContext
-				);
+				if (constraint.toElement[0] != containerEl) {
+					angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(
+						constraint.toElement,
+						constraint.toContext
+					) : provider.materializeContext(
+						constraint.toAttribute,
+						constraint.toElement,
+						constraint.toContext
+					);
+				}
 			};
 		};
 

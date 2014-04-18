@@ -184,7 +184,7 @@ describe('Angular Autolayout', function() {
 				expect(elB.css('left')).to.equal('');
 			});
 
-			it('should materialize constraint', function() {
+			it('should materialize a constraint between two elements', function() {
 				expect(elA[0].offsetLeft).to.equal(0);
 				expect(elA[0].offsetWidth).to.equal(10);
 				expect(elB[0].offsetLeft).to.equal(0);
@@ -207,6 +207,63 @@ describe('Angular Autolayout', function() {
 				expect(elB.css('left')).to.equal('30px');
 			});
 
+			it('should materialize a constraint between an element and it\'s container', function() {
+				containerElement.css({
+					position: 'absolute',
+					top: '15px',
+					left: '15px'
+				});
+				expect(containerElement[0].offsetLeft).to.equal(15);
+				expect(containerElement[0].offsetWidth).to.equal(100);
+				expect(elA[0].offsetLeft).to.equal(0);
+				expect(elA[0].offsetWidth).to.equal(10);
+				expect(elA.css('left')).to.equal('');
+				al.addConstraint({
+					fromElement: null,
+					fromAttribute: 'right',
+					toElement: elA,
+					toAttribute: 'right',
+					relatedBy: 'equal',
+					constant: 0
+				});
+				expect(containerElement[0].offsetLeft).to.equal(15);
+				expect(containerElement[0].offsetWidth).to.equal(100);
+				expect(elA[0].offsetLeft).to.equal(90);
+				expect(elA[0].offsetWidth).to.equal(10);
+				expect(elA.css('left')).to.equal('90px');
+			});
+
+			it('should materialize multiple constraints', function() {
+				containerElement.css({
+					position: 'absolute',
+					top: '15px',
+					left: '15px'
+				});
+				expect(containerElement[0].offsetLeft).to.equal(15);
+				expect(containerElement[0].offsetWidth).to.equal(100);
+				expect(elA[0].offsetLeft).to.equal(0);
+				expect(elA[0].offsetWidth).to.equal(10);
+				al.addConstraint({
+					fromElement: null,
+					fromAttribute: 'left',
+					toElement: elA,
+					toAttribute: 'left',
+					relatedBy: 'equal',
+					constant: -10
+				});
+				al.addConstraint({
+					fromElement: elA,
+					fromAttribute: 'width',
+					toElement: null,
+					toAttribute: 'width',
+					relatedBy: 'equal',
+					constant: -20
+				});
+				expect(containerElement[0].offsetLeft).to.equal(15);
+				expect(containerElement[0].offsetWidth).to.equal(100);
+				expect(elA[0].offsetLeft).to.equal(10);
+				expect(elA[0].offsetWidth).to.equal(80);
+			});
 		});
 	});
 });
