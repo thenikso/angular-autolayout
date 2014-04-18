@@ -32,8 +32,8 @@ superview
   = "|" { return { view: null } }
 
 view
-  = "[" viewName:viewName predicates:predicateListWithParens? "]"
-  { return extend({ view: viewName }, predicates ? { constrains: predicates } : {}) }
+  = "[" view:viewName predicates:predicateListWithParens? "]"
+  { return extend(view, predicates ? { constrains: predicates } : {}) }
 
 connection
   = "-" predicateList:predicateList "-" { return predicateList }
@@ -71,7 +71,7 @@ constant
   = n:number { return { constant: n } }
 
 viewName
-  = $[a-zA-Z#\.]+
+  = v:$[a-zA-Z0-9#\.]+ { return { view: v } }
 
 number
   = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
