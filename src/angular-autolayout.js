@@ -5,7 +5,16 @@
 
 	// Expose cassowary
 	var c = context.c;
+	if (!c) {
+		throw new Error("Cassowary missing!");
+	}
 	angular.module('autolayout').constant('cassowary', c);
+
+	// Visual format parser
+	var visualFormat = context.vistualFormatParser;
+	if (!visualFormat) {
+		throw new Error("Visual format parser missing!");
+	}
 
 	// Main `autolayout` service
 	angular.module('autolayout').provider('autolayout', function() {
@@ -309,7 +318,7 @@
 			var updater;
 			var didEdit = false;
 			var el = this.containerElement[0];
-			for (prop in ctxs) {
+			for (var prop in ctxs) {
 				updater = provider.attributeConverters[prop];
 				if (!updater || !updater.update) {
 					continue;

@@ -1,73 +1,95 @@
 'use strict';
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
-  // Load grunt tasks automatically
-  require('load-grunt-tasks')(grunt);
+	// Load grunt tasks automatically
+	require('load-grunt-tasks')(grunt);
 
-  // Time how long tasks take. Can help when optimizing build times
-  require('time-grunt')(grunt);
+	// Time how long tasks take. Can help when optimizing build times
+	require('time-grunt')(grunt);
 
-  // Define the configuration for all the tasks
-  grunt.initConfig({
+	// Define the configuration for all the tasks
+	grunt.initConfig({
 
-    clean: {
-      dist: {
-        files: [{
-          dot: true,
-          src: [
-            '.tmp',
-            'dist/*',
-            '!dist/.git*'
-          ]
-        }]
-      }
-    },
+		clean: {
+			dist: {
+				files: [{
+					dot: true,
+					src: [
+						'.tmp',
+						'dist/*',
+						'!dist/.git*'
+					]
+				}]
+			}
+		},
 
-    ngmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp',
-          src: '*.js',
-          dest: '.tmp'
-        }]
-      }
-    },
+		ngmin: {
+			dist: {
+				files: [{
+					expand: true,
+					cwd: 'src',
+					src: '*.js',
+					dest: '.tmp'
+				}]
+			}
+		},
 
-    concat: {
-      options: {
-        separator: ';',
-        stripBanners: false,
-        banner: '(function () { angular.bind({}, function(){',
-        footer: '})()})();'
-      },
-      dist: {
-        src: ['node_modules/cassowary/bin/c.js', 'src/*.js'],
-        dest: 'dist/angular-autolayout.js',
-      },
-    },
+		peg: {
+			dist: {
+				src: 'src/visual-format-grammar.peg',
+				dest: '.tmp/visual-format-parser.js',
+				options: {
+					exportVar: "this.vistualFormatParser"
+				}
+			}
+		},
 
-    uglify: {
-      dist: {
-        files: {
-          'dist/angular-autolayout.min.js': [
-            'dist/angular-autolayout.js'
-          ]
-        }
-      }
-    },
+		concat: {
+			options: {
+				separator: ';',
+				stripBanners: false,
+				banner: '(function () { angular.bind({}, function(){',
+				footer: '})()})();'
+			},
+			dist: {
+				src: ['node_modules/cassowary/bin/c.js', '.tmp/visual-format-parser.js', '.tmp/angular-autolayout.js'],
+				dest: 'dist/angular-autolayout.js',
+			},
+		},
 
-  });
+		uglify: {
+			dist: {
+				files: {
+					'dist/angular-autolayout.min.js': [
+						'dist/angular-autolayout.js'
+					]
+				}
+			}
+		},
 
-  grunt.registerTask('build', [
-    'clean:dist',
-    'ngmin',
-    'concat',
-    'uglify'
-  ]);
+		karma: {
+			unit: {
+				configFile: 'karma.conf.js'
+			}
+		},
 
-  grunt.registerTask('default', [
-    'build'
-  ]);
+	});
+
+	grunt.registerTask('build', [
+		'clean:dist',
+		'peg',
+		'ngmin',
+		'concat',
+		'uglify'
+	]);
+
+	grunt.registerTask('test', [
+		'peg',
+		'karma'
+	]);
+
+	grunt.registerTask('default', [
+		'build'
+	]);
 };
