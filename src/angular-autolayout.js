@@ -209,7 +209,7 @@
 				throw new Error("A `toAttribute` for `toElement` is required.");
 			}
 			if (!constraint.relation) {
-				throw new Error("A relation parameter is required.");
+				throw new Error("A `relation` parameter is required.");
 			}
 			constraint = angular.extend({}, constraint);
 			constraint.element = angular.element(constraint.element || this.containerElement);
@@ -256,7 +256,13 @@
 				);
 			} else {
 				// Element attribute constraint
-
+				if (!angular.isNumber(constraint.constant)) {
+					throw new Error("A numeric `constant` parameter is required.");
+				}
+				constraint.$constraint = constraint.relationFactory(
+					constraint.expression,
+					constraint.constant
+				);
 			}
 			if (!constraint.$constraint) {
 				throw new Error("Unable to create constraint with parameters: " + constraint);
@@ -297,7 +303,7 @@
 					);
 				}
 
-				if (constraint.toElement[0] != containerEl) {
+				if (constraint.toElement && constraint.toElement[0] != containerEl) {
 					angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(
 						constraint.toElement,
 						constraint.toExpression
