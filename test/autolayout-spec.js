@@ -308,38 +308,41 @@ describe('Angular Autolayout', function() {
 				expect(elA[0].offsetWidth).to.equal(180);
 			});
 
-			// it('should update constraints of child autolayouts', function() {
-			// 	nestedAl = autolayout(elA);
-			// 	elB.remove();
-			// 	elA.append(elB);
-			// 	expect(containerElement[0].offsetWidth).to.equal(100);
-			// 	expect(elA[0].offsetWidth).to.equal(10);
-			// 	expect(elB[0].offsetWidth).to.equal(10);
-			// 	al.addConstraint({
-			// 		fromElement: elA,
-			// 		fromAttribute: 'width',
-			// 		toElement: null,
-			// 		toAttribute: 'width',
-			// 		relatedBy: 'equal',
-			// 		constant: -20
-			// 	});
-			// 	expect(elA[0].offsetWidth).to.equal(80);
-			// 	nestedAl.addConstraint({
-			// 		fromElement: elB,
-			// 		fromAttribute: 'width',
-			// 		toAttribute: 'width',
-			// 		relatedBy: 'equal',
-			// 		constraint: -2
-			// 	});
-			// 	expect(elB[0].offsetWidth).to.equal(8);
-			// 	containerElement.css({
-			// 		width: '200px'
-			// 	});
-			// 	al.update();
-			// 	expect(containerElement[0].offsetWidth).to.equal(200);
-			// 	expect(elA[0].offsetWidth).to.equal(180);
-			// 	expect(elB[0].offsetWidth).to.equal(178);
-			// });
+			it('should update constraints of child autolayouts', function() {
+				nestedAl = autolayout(elA);
+				elB.remove();
+				elA.append(elB);
+				expect(containerElement[0].offsetWidth).to.equal(100);
+				expect(elA[0].offsetWidth).to.equal(10);
+				expect(elB[0].offsetWidth).to.equal(10);
+				al.addConstraint({
+					fromElement: elA,
+					fromAttribute: 'width',
+					toElement: null,
+					toAttribute: 'width',
+					relatedBy: 'equal',
+					constant: -20
+				});
+				expect(elA[0].offsetWidth).to.equal(80);
+				expect(elB[0].offsetWidth).to.equal(10);
+				nestedAl.addConstraint({
+					fromElement: elB,
+					fromAttribute: 'width',
+					toElement: null,
+					toAttribute: 'width',
+					relatedBy: 'equal',
+					constant: -20
+				});
+				expect(elA[0].offsetWidth).to.equal(80);
+				expect(elB[0].offsetWidth).to.equal(60);
+				containerElement.css({
+					width: '200px'
+				});
+				al.update();
+				expect(containerElement[0].offsetWidth).to.equal(200);
+				expect(elA[0].offsetWidth).to.equal(180);
+				expect(elB[0].offsetWidth).to.equal(160);
+			});
 
 		});
 	});

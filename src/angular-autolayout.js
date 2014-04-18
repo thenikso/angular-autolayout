@@ -13,6 +13,7 @@
 		var provider = this;
 
 		provider.defaultPriority = 1000;
+		provider.autolayoutInstanceDataKey = '$autolayout';
 		provider.autolayoutChildElementContextsDataKey = '$autolayoutContexts';
 		provider.autolayoutContainerElementContextsDataKey = '$autolayoutContainerContexts';
 
@@ -188,11 +189,11 @@
 				return new Autolayout(container);
 			}
 			this.containerElement = angular.element(container || Autolayout.$rootElement);
-			var instance = this.containerElement.data('$autolayout');
+			var instance = this.containerElement.data(provider.autolayoutInstanceDataKey);
 			if (instance instanceof Autolayout) {
 				return instance;
 			} else {
-				this.containerElement.data('$autolayout', this);
+				this.containerElement.data(provider.autolayoutInstanceDataKey, this);
 			}
 			this.solver = new c.SimplexSolver();
 			this.constraints = [];
@@ -319,11 +320,22 @@
 				}
 				updater.update(el, ctxs[prop], this.solver);
 			}
-			if (didEdit) {
-				this.solver.resolve();
-				this.solver.endEdit();
-				this.materialize();
+			if (!didEdit) {
+				return;
 			}
+			// Resolve and materialize update
+			this.solver.resolve();
+			this.solver.endEdit();
+			this.materialize();
+			// update child autolayout containers
+			var children = this.containerElement.children();
+			var childAutolayout;
+			for (var i = children.length - 1; i >= 0; i--) {
+				childAutolayout = angular.element(children[i]).data(provider.autolayoutInstanceDataKey);
+				if (childAutolayout instanceof Autolayout) {
+					childAutolayout.update();
+				}
+			};
 		};
 
 		provider.$get = ['$rootElement',
