@@ -344,6 +344,24 @@ describe('Angular Autolayout', function() {
 				expect(elB[0].offsetWidth).to.equal(160);
 			});
 
+			it('should cleanup when destroyed', function() {
+				al.addConstraint({
+					fromElement: null,
+					fromAttribute: 'right',
+					toElement: elA,
+					toAttribute: 'right',
+					relatedBy: 'equal',
+					constant: 0
+				});
+				expect(elA.data('$autolayoutContexts')).to.not.be.undefined;
+				expect(containerElement.data('$autolayoutContainerContexts')).to.not.be.undefined;
+				expect(containerElement.data('$autolayoutContexts')).to.be.undefined;
+				al.destroy();
+				expect(elA.data('$autolayoutContexts')).to.be.null;
+				expect(containerElement.data('$autolayoutContainerContexts')).to.be.null;
+				expect(containerElement.data('$autolayoutContexts')).to.be.undefined;
+			});
+
 		});
 	});
 });

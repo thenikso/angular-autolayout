@@ -338,6 +338,17 @@
 			};
 		};
 
+		Autolayout.prototype.destroy = function() {
+			this.containerElement.data(provider.autolayoutInstanceDataKey, null);
+			this.containerElement.data(provider.autolayoutContainerElementContextsDataKey, null);
+			var children = this.containerElement.children();
+			for (var i = children.length - 1; i >= 0; i--) {
+				angular.element(children[i]).data(provider.autolayoutChildElementContextsDataKey, null);
+			}
+			this.constraints = [];
+			this.solver = null;
+		};
+
 		provider.$get = ['$rootElement',
 			function($rootElement) {
 				Autolayout.$rootElement = $rootElement;
