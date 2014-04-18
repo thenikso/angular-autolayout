@@ -54,23 +54,26 @@ describe('Angular Autolayout Provider', function() {
 		expect(autolayoutProvider.attributeConverters.bottom).to.not.be.undefined;
 	});
 
-	it('should cache contexts with `contextCreatorForElementAttribute`', function() {
-		expect(autolayoutProvider.contextCreatorForElementAttribute).to.be.a("function");
+	it('should cache contexts with `expressionForElementAttribute`', function() {
+		expect(autolayoutProvider.expressionForElementAttribute).to.be.a("function");
 		var el = angular.element('<div></div>');
 		var rel = angular.element('<div></div>').append(el);
-		var c1 = autolayoutProvider.contextCreatorForElementAttribute('left', el, rel);
-		var c2 = autolayoutProvider.contextCreatorForElementAttribute('left', el, rel);
+		var solver = {
+			addConstraint: sinon.spy()
+		};
+		var c1 = autolayoutProvider.expressionForElementAttribute('left', el, rel, solver);
+		var c2 = autolayoutProvider.expressionForElementAttribute('left', el, rel, solver);
 		expect(c1).to.equal(c2);
 	});
 
-	it('should materialize a context via `materializeContext`', function() {
-		expect(autolayoutProvider.materializeContext).to.be.a("function");
+	it('should materialize a context via `materializeExpressionValue`', function() {
+		expect(autolayoutProvider.materializeExpressionValue).to.be.a("function");
 		var spy = sinon.spy();
 		autolayoutProvider.attributeConverters.test = {
 			materialize: spy
 		};
-		var el = {}, ctx = {};
-		autolayoutProvider.materializeContext('test', el, ctx);
-		expect(spy.calledWith(el, ctx)).to.be.true;
+		var el = {}, exp = {};
+		autolayoutProvider.materializeExpressionValue('test', el, exp);
+		expect(spy.calledWith(el, exp)).to.be.true;
 	});
 });

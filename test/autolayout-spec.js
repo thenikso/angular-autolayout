@@ -87,15 +87,15 @@ describe('Angular Autolayout', function() {
 				throw ();
 				expect(function() {
 					al.addConstraint({
-						fromAttribute: 'left',
+						attribute: 'left',
 						toAttribute: 'right'
 					})
 				}).to.
 				throw ();
 				expect(function() {
 					al.addConstraint({
-						fromElement: elA,
-						fromAttribute: 'left',
+						element: elA,
+						attribute: 'left',
 						toAttribute: 'right'
 					})
 				}).to.
@@ -105,28 +105,28 @@ describe('Angular Autolayout', function() {
 			it('should throw if adding a constraint with invalid options', function() {
 				expect(function() {
 					al.addConstraint({
-						fromElement: elA,
-						fromAttribute: 'INVALID',
+						element: elA,
+						attribute: 'INVALID',
 						toAttribute: 'right',
-						relatedBy: 'equal'
+						relation: 'equal'
 					})
 				}).to.
 				throw ();
 				expect(function() {
 					al.addConstraint({
-						fromElement: elA,
-						fromAttribute: 'left',
+						element: elA,
+						attribute: 'left',
 						toAttribute: 'INVALID',
-						relatedBy: 'equal'
+						relation: 'equal'
 					})
 				}).to.
 				throw ();
 				expect(function() {
 					al.addConstraint({
-						fromElement: elA,
-						fromAttribute: 'left',
+						element: elA,
+						attribute: 'left',
 						toAttribute: 'right',
-						relatedBy: 'INVALID'
+						relation: 'INVALID'
 					})
 				}).to.
 				throw ();
@@ -138,15 +138,15 @@ describe('Angular Autolayout', function() {
 				var rbSpy = sinon.stub().returns(new cassowary.Equation(0, 0));
 				expect(function() {
 					c = al.addConstraint({
-						fromElement: elA,
-						fromAttribute: faSpy,
+						element: elA,
+						attribute: faSpy,
 						toAttribute: 'right',
-						relatedBy: rbSpy
+						relation: rbSpy
 					})
 				}).not.to.
 				throw ();
 				expect(c).to.not.be.undefined;
-				expect(c.fromElement).to.equal(elA);
+				expect(c.element).to.equal(elA);
 				expect(c.toElement).to.equal(containerElement);
 				expect(faSpy.called).to.be.true;
 				expect(rbSpy.called).to.be.true;
@@ -157,11 +157,11 @@ describe('Angular Autolayout', function() {
 				elA.append(elNested);
 				expect(function() {
 					al.addConstraint({
-						fromElement: elA,
-						fromAttribute: 'right',
+						element: elA,
+						attribute: 'right',
 						toElement: elNested,
 						toAttribute: 'left',
-						relatedBy: 'equal',
+						relation: 'equal',
 						constant: 20
 					});
 				}).to.
@@ -173,11 +173,11 @@ describe('Angular Autolayout', function() {
 				expect(elA.css('left')).to.equal('');
 				expect(elB.css('left')).to.equal('');
 				al.addConstraint({
-					fromElement: elA,
-					fromAttribute: 'right',
+					element: elA,
+					attribute: 'right',
 					toElement: elB,
 					toAttribute: 'left',
-					relatedBy: 'equal',
+					relation: 'equal',
 					constant: 20
 				});
 				expect(elA.css('left')).to.equal('');
@@ -192,11 +192,11 @@ describe('Angular Autolayout', function() {
 				expect(elA.css('left')).to.equal('');
 				expect(elB.css('left')).to.equal('');
 				al.addConstraint({
-					fromElement: elA,
-					fromAttribute: 'right',
+					element: elA,
+					attribute: 'right',
 					toElement: elB,
 					toAttribute: 'left',
-					relatedBy: 'equal',
+					relation: 'equal',
 					constant: -20
 				});
 				expect(elA[0].offsetLeft).to.equal(0);
@@ -205,9 +205,9 @@ describe('Angular Autolayout', function() {
 				expect(elB[0].offsetWidth).to.equal(10);
 				expect(elA.css('left')).to.equal('0px');
 				expect(elB.css('left')).to.equal('30px');
-				expect(elA.data('$autolayoutContexts')).to.not.be.undefined;
-				expect(elB.data('$autolayoutContexts')).to.not.be.undefined;
-				expect(containerElement.data('$autolayoutContexts')).to.be.undefined;
+				expect(elA.data('$autolayoutExpressions')).to.not.be.undefined;
+				expect(elB.data('$autolayoutExpressions')).to.not.be.undefined;
+				expect(containerElement.data('$autolayoutExpressions')).to.be.undefined;
 			});
 
 			it('should materialize a constraint between an element and it\'s container', function() {
@@ -222,11 +222,11 @@ describe('Angular Autolayout', function() {
 				expect(elA[0].offsetWidth).to.equal(10);
 				expect(elA.css('left')).to.equal('');
 				al.addConstraint({
-					fromElement: null,
-					fromAttribute: 'right',
+					element: null,
+					attribute: 'right',
 					toElement: elA,
 					toAttribute: 'right',
-					relatedBy: 'equal',
+					relation: 'equal',
 					constant: 0
 				});
 				expect(containerElement[0].offsetLeft).to.equal(15);
@@ -234,9 +234,9 @@ describe('Angular Autolayout', function() {
 				expect(elA[0].offsetLeft).to.equal(90);
 				expect(elA[0].offsetWidth).to.equal(10);
 				expect(elA.css('left')).to.equal('90px');
-				expect(elA.data('$autolayoutContexts')).to.not.be.undefined;
-				expect(containerElement.data('$autolayoutContainerContexts')).to.not.be.undefined;
-				expect(containerElement.data('$autolayoutContexts')).to.be.undefined;
+				expect(elA.data('$autolayoutExpressions')).to.not.be.undefined;
+				expect(containerElement.data('$autolayoutContainerExpressions')).to.not.be.undefined;
+				expect(containerElement.data('$autolayoutExpressions')).to.be.undefined;
 			});
 
 			it('should materialize multiple constraints', function() {
@@ -250,19 +250,19 @@ describe('Angular Autolayout', function() {
 				expect(elA[0].offsetLeft).to.equal(0);
 				expect(elA[0].offsetWidth).to.equal(10);
 				al.addConstraint({
-					fromElement: null,
-					fromAttribute: 'left',
+					element: null,
+					attribute: 'left',
 					toElement: elA,
 					toAttribute: 'left',
-					relatedBy: 'equal',
+					relation: 'equal',
 					constant: -10
 				});
 				al.addConstraint({
-					fromElement: elA,
-					fromAttribute: 'width',
+					element: elA,
+					attribute: 'width',
 					toElement: null,
 					toAttribute: 'width',
-					relatedBy: 'equal',
+					relation: 'equal',
 					constant: -20
 				});
 				expect(containerElement[0].offsetLeft).to.equal(15);
@@ -282,19 +282,19 @@ describe('Angular Autolayout', function() {
 				expect(elA[0].offsetLeft).to.equal(0);
 				expect(elA[0].offsetWidth).to.equal(10);
 				al.addConstraint({
-					fromElement: null,
-					fromAttribute: 'left',
+					element: null,
+					attribute: 'left',
 					toElement: elA,
 					toAttribute: 'left',
-					relatedBy: 'equal',
+					relation: 'equal',
 					constant: -10
 				});
 				al.addConstraint({
-					fromElement: elA,
-					fromAttribute: 'width',
+					element: elA,
+					attribute: 'width',
 					toElement: null,
 					toAttribute: 'width',
-					relatedBy: 'equal',
+					relation: 'equal',
 					constant: -20
 				});
 				containerElement.css({
@@ -316,21 +316,21 @@ describe('Angular Autolayout', function() {
 				expect(elA[0].offsetWidth).to.equal(10);
 				expect(elB[0].offsetWidth).to.equal(10);
 				al.addConstraint({
-					fromElement: elA,
-					fromAttribute: 'width',
+					element: elA,
+					attribute: 'width',
 					toElement: null,
 					toAttribute: 'width',
-					relatedBy: 'equal',
+					relation: 'equal',
 					constant: -20
 				});
 				expect(elA[0].offsetWidth).to.equal(80);
 				expect(elB[0].offsetWidth).to.equal(10);
 				nestedAl.addConstraint({
-					fromElement: elB,
-					fromAttribute: 'width',
+					element: elB,
+					attribute: 'width',
 					toElement: null,
 					toAttribute: 'width',
-					relatedBy: 'equal',
+					relation: 'equal',
 					constant: -20
 				});
 				expect(elA[0].offsetWidth).to.equal(80);
@@ -346,20 +346,20 @@ describe('Angular Autolayout', function() {
 
 			it('should cleanup when destroyed', function() {
 				al.addConstraint({
-					fromElement: null,
-					fromAttribute: 'right',
+					element: null,
+					attribute: 'right',
 					toElement: elA,
 					toAttribute: 'right',
-					relatedBy: 'equal',
+					relation: 'equal',
 					constant: 0
 				});
-				expect(elA.data('$autolayoutContexts')).to.not.be.undefined;
-				expect(containerElement.data('$autolayoutContainerContexts')).to.not.be.undefined;
-				expect(containerElement.data('$autolayoutContexts')).to.be.undefined;
+				expect(elA.data('$autolayoutExpressions')).to.not.be.undefined;
+				expect(containerElement.data('$autolayoutContainerExpressions')).to.not.be.undefined;
+				expect(containerElement.data('$autolayoutExpressions')).to.be.undefined;
 				al.destroy();
-				expect(elA.data('$autolayoutContexts')).to.be.null;
-				expect(containerElement.data('$autolayoutContainerContexts')).to.be.null;
-				expect(containerElement.data('$autolayoutContexts')).to.be.undefined;
+				expect(elA.data('$autolayoutExpressions')).to.be.null;
+				expect(containerElement.data('$autolayoutContainerExpressions')).to.be.null;
+				expect(containerElement.data('$autolayoutExpressions')).to.be.undefined;
 			});
 
 		});
