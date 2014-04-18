@@ -13,6 +13,8 @@
 		var provider = this;
 
 		provider.defaultPriority = 1000;
+		provider.autolayoutChildElementContextsDataKey = '$autolayoutContexts';
+		provider.autolayoutContainerElementContextsDataKey = '$autolayoutContainerContexts';
 
 		provider.relations = {
 			equal: function(a, b, priority) {
@@ -155,11 +157,13 @@
 			creator = creator.create;
 			el = angular.element(el);
 			contEl = angular.element(contEl);
+			// Get relevant data name
+			var dataKey = el[0] == contEl[0] ? provider.autolayoutContainerElementContextsDataKey : provider.autolayoutChildElementContextsDataKey;
 			// Get or create `$autolayoutContexts` object
-			var ctxs = el.data('$autolayoutContexts');
+			var ctxs = el.data(dataKey);
 			if (!angular.isObject(ctxs)) {
 				ctxs = {};
-				el.data('$autolayoutContexts', ctxs);
+				el.data(dataKey, ctxs);
 			}
 			// Return cached context if present
 			ctx = ctxs[prop];
@@ -300,7 +304,7 @@
 		};
 
 		Autolayout.prototype.update = function() {
-			var ctxs = this.containerElement.data('$autolayoutContexts');
+			var ctxs = this.containerElement.data(provider.autolayoutContainerElementContextsDataKey);
 			var updater;
 			var didEdit = false;
 			var el = this.containerElement[0];

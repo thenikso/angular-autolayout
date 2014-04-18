@@ -205,6 +205,9 @@ describe('Angular Autolayout', function() {
 				expect(elB[0].offsetWidth).to.equal(10);
 				expect(elA.css('left')).to.equal('0px');
 				expect(elB.css('left')).to.equal('30px');
+				expect(elA.data('$autolayoutContexts')).to.not.be.undefined;
+				expect(elB.data('$autolayoutContexts')).to.not.be.undefined;
+				expect(containerElement.data('$autolayoutContexts')).to.be.undefined;
 			});
 
 			it('should materialize a constraint between an element and it\'s container', function() {
@@ -231,6 +234,9 @@ describe('Angular Autolayout', function() {
 				expect(elA[0].offsetLeft).to.equal(90);
 				expect(elA[0].offsetWidth).to.equal(10);
 				expect(elA.css('left')).to.equal('90px');
+				expect(elA.data('$autolayoutContexts')).to.not.be.undefined;
+				expect(containerElement.data('$autolayoutContainerContexts')).to.not.be.undefined;
+				expect(containerElement.data('$autolayoutContexts')).to.be.undefined;
 			});
 
 			it('should materialize multiple constraints', function() {
@@ -301,6 +307,40 @@ describe('Angular Autolayout', function() {
 				expect(elA[0].offsetLeft).to.equal(10);
 				expect(elA[0].offsetWidth).to.equal(180);
 			});
+
+			// it('should update constraints of child autolayouts', function() {
+			// 	nestedAl = autolayout(elA);
+			// 	elB.remove();
+			// 	elA.append(elB);
+			// 	expect(containerElement[0].offsetWidth).to.equal(100);
+			// 	expect(elA[0].offsetWidth).to.equal(10);
+			// 	expect(elB[0].offsetWidth).to.equal(10);
+			// 	al.addConstraint({
+			// 		fromElement: elA,
+			// 		fromAttribute: 'width',
+			// 		toElement: null,
+			// 		toAttribute: 'width',
+			// 		relatedBy: 'equal',
+			// 		constant: -20
+			// 	});
+			// 	expect(elA[0].offsetWidth).to.equal(80);
+			// 	nestedAl.addConstraint({
+			// 		fromElement: elB,
+			// 		fromAttribute: 'width',
+			// 		toAttribute: 'width',
+			// 		relatedBy: 'equal',
+			// 		constraint: -2
+			// 	});
+			// 	expect(elB[0].offsetWidth).to.equal(8);
+			// 	containerElement.css({
+			// 		width: '200px'
+			// 	});
+			// 	al.update();
+			// 	expect(containerElement[0].offsetWidth).to.equal(200);
+			// 	expect(elA[0].offsetWidth).to.equal(180);
+			// 	expect(elB[0].offsetWidth).to.equal(178);
+			// });
+
 		});
 	});
 });
