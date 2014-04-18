@@ -42,7 +42,6 @@
 					return ctx;
 				},
 				materialize: function(el, ctx) {
-					console.log(el, 'top', ctx.top.value + 'px');
 					el.css('top', ctx.top.value + 'px');
 				}
 			},
@@ -61,7 +60,6 @@
 					return ctx;
 				},
 				materialize: function(el, ctx) {
-					console.log(el, 'left', ctx.left.value + 'px');
 					el.css('left', ctx.left.value + 'px');
 				}
 			},
@@ -86,7 +84,6 @@
 					solver.suggestValue(ctx.width, contEl.getBoundingClientRect().width);
 				},
 				materialize: function(el, ctx) {
-					console.log(el, 'width', ctx.width.value + 'px');
 					el.css('width', ctx.width.value + 'px');
 				}
 			},
@@ -111,7 +108,6 @@
 					solver.suggestValue(ctx.height, contEl.getBoundingClientRect().height);
 				},
 				materialize: function(el, ctx) {
-					console.log(el, 'height', ctx.height.value + 'px');
 					el.css('height', ctx.height.value + 'px');
 				}
 			},
