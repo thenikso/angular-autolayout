@@ -472,4 +472,52 @@
 
 	});
 
+	// Autolayout directive `al-constraint`
+	angular.module('autolayout').directive('alConstraint', ['autolayout',
+		function(autolayout) {
+			return {
+				restrict: 'E',
+				priority: 400,
+				terminal: true,
+				compile: function alConstraintCompile(element, attrs) {
+					// Collect constraint options
+					var visualFormat = attrs.visualFormat;
+					var constraintOptions = {
+						element: attrs.element,
+						attribute: attrs.attribute,
+						toElement: attrs.toElement,
+						toAttribute: attrs.toAttribute,
+						relation: attrs.relation,
+						multiplier: parseFloat(attrs.multiplier) || 1,
+						constant: parseFloat(attrs.constant) || 0,
+						priority: parseInt(attrs.priority) || undefined
+					};
+
+					// Replace element with comment and remove it from the DOM
+					var description = '';
+					if (visualFormat) {
+						description = visualFormat;
+					} else {
+						description = JSON.stringify(constraintOptions);
+					}
+					var comment = angular.element('<!-- al-constraint: ' + description + ' -->');
+					element.after(comment);
+					element.remove();
+
+					return function alConstraintLink(scope, element, attrs) {
+						var al = autolayout(element.parent());
+						var cs = null;
+						if (visualFormat) {
+							cs = al.addConstraint(visualFormat);
+						} else {
+							constraintOptions.element = document.getElementById(constraintOptions.element);
+							constraintOptions.toElement = document.getElementById(constraintOptions.toElement);
+							cs = al.addConstraint(constraintOptions);
+						}
+					}
+				}
+			}
+		}
+	]);
+
 })(this);
