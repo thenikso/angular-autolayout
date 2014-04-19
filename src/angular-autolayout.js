@@ -272,7 +272,14 @@
 						attribute: parsed.orientation == 'vertical' ? 'height' : 'width'
 					};
 					for (var i = constriants.length - 1; i >= 0; i--) {
-						res.push(this.addConstraint(angular.extend(constraint, constriants[i])));
+						constraint = angular.extend(constraint, constriants[i]);
+						if (constraint.view) {
+							constraint.toElement = document.getElementById(constraint.view);
+							constraint.toAttribute = constraint.attribute;
+							constraint.constant = 0;
+							delete constraint.view;
+						}
+						res.push(this.addConstraint(constraint));
 					}
 				}
 				return res;
