@@ -5,9 +5,13 @@ describe('Visual Language Constraints', function() {
 
 	var autolayout, al;
 	var containerEl, redEl, blueEl, greenEl;
+	var standardSpace = 10;
 
 	beforeEach(function() {
-		module('autolayout');
+		angular.module('testModule', ['autolayout']).config(function(_autolayoutProvider_) {
+			_autolayoutProvider_.standardSpace = standardSpace;
+		});
+		module('testModule');
 		inject(function(_autolayout_) {
 			autolayout = _autolayout_;
 		});
@@ -19,6 +23,10 @@ describe('Visual Language Constraints', function() {
 		blueEl = angular.element('<div id="blueEl" style="background:blue;"></div>');
 		greenEl = angular.element('<div id="greenEl" style="background:green;"></div>');
 		containerEl.append(redEl).append(blueEl).append(greenEl);
+		containerEl.children().css({
+			'min-width': '10px',
+			'min-height': '10px'
+		});
 		angular.element(document.body).append(containerEl);
 		al = autolayout(containerEl);
 	});
@@ -52,6 +60,13 @@ describe('Visual Language Constraints', function() {
 		al.addConstraint("[redEl(==blueEl,<=40)]");
 		expect(redEl[0].offsetWidth).to.equal(40);
 		expect(blueEl[0].offsetWidth).to.equal(40);
+	});
+
+	it('should add constraints between multiple elements', function() {
+		al.addConstraint("|-[redEl(==blueEl)]-[blueEl]-[greenEl(>=40)]-|");
+		expect(redEl[0].offsetWidth).to.equal(10);
+		expect(blueEl[0].offsetWidth).to.equal(10);
+		expect(greenEl[0].offsetWidth).to.equal(40);
 	});
 
 });

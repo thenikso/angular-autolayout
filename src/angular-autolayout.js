@@ -271,8 +271,8 @@
 						element: document.getElementById(parsed.cascade[i].view),
 						attribute: parsed.orientation == 'vertical' ? 'height' : 'width'
 					};
-					for (var i = constriants.length - 1; i >= 0; i--) {
-						constraint = angular.extend(constraint, constriants[i]);
+					for (var j = constriants.length - 1; j >= 0; j--) {
+						constraint = angular.extend(constraint, constriants[j]);
 						if (constraint.view) {
 							constraint.toElement = document.getElementById(constraint.view);
 							constraint.toAttribute = constraint.attribute;
