@@ -398,6 +398,12 @@ describe('Angular Autolayout', function() {
 				expect(elA[0].offsetWidth).to.equal(30);
 			});
 
+			it('should support priorities in element constraints with visual language', function() {
+				expect(elA[0].offsetWidth).to.equal(10);
+				al.addConstraint("[elA(>=30@10,<=20@30)]");
+				expect(elA[0].offsetWidth).to.equal(20);
+			});
+
 		});
 	});
 });

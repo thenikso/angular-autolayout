@@ -342,7 +342,8 @@
 				}
 				constraint.$constraint = constraint.relationFactory(
 					constraint.expression,
-					constraint.constant
+					constraint.constant,
+					constraint.priority || provider.standardPriority
 				);
 			}
 			if (!constraint.$constraint) {
