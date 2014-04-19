@@ -33,7 +33,7 @@ superview
 
 view
   = "[" view:viewName predicates:predicateListWithParens? "]"
-  { return extend(view, predicates ? { constrains: predicates } : {}) }
+  { return extend(view, predicates ? { constraints: predicates } : {}) }
 
 connection
   = "-" predicateList:predicateList "-" { return predicateList }

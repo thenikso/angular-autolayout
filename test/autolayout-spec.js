@@ -383,13 +383,19 @@ describe('Angular Autolayout', function() {
 				expect(containerElement.data('$autolayoutExpressions')).to.be.undefined;
 			});
 
-			it('should add a constraint with visual language', function() {
+			it('should add a constraint between elements with visual language', function() {
 				expect(containerElement[0].offsetWidth).to.equal(100);
 				expect(elA[0].offsetLeft).to.equal(0);
 				expect(elA[0].offsetWidth).to.equal(10);
 				al.addConstraint("|-5-[elA]-10-|");
 				expect(elA[0].offsetLeft).to.equal(5);
 				expect(elA[0].offsetWidth).to.equal(100 - 5 - 10);
+			});
+
+			it('should add a constraint within element with visual language', function() {
+				expect(elA[0].offsetWidth).to.equal(10);
+				al.addConstraint("[elA(>=30)]");
+				expect(elA[0].offsetWidth).to.equal(30);
 			});
 
 		});

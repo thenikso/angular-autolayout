@@ -199,7 +199,33 @@
 		Autolayout.prototype.addConstraint = function(constraint) {
 			if (angular.isString(constraint)) {
 				var res = [];
+				// Parse visual format language to:
+				// {
+				// 	orientation: "horizontal"|"vertical",
+				// 	cascade: [
+				// 		{
+				// 			view: "viewName"|null,
+				// 			constrains: [
+				// 				{
+				// 					relation: "equal"|"greaterOrEqual"|"lessOrEqual",
+				// 					constant: positiveNumber
+				// 				},
+				// 				...
+				// 			]
+				// 		},
+				// 		[
+				// 			{
+				// 				relation: "equal"|"greaterOrEqual"|"lessOrEqual",
+				// 				constant: "default"|positiveNumber
+				// 			},
+				// 			...
+				// 		],
+				// 		...
+				// 	]
+				// }
 				var parsed = visualFormat.parse(constraint);
+				// Generate constraint parameters object template for external attributes
+				// based on the position of the index in the parsed constraints cascade
 				var makeExternalAttrTemplate = function(index, cascadeLimit) {
 					var segment = index ? (index + 1 >= cascadeLimit ? 1 : 0) : -1;
 					return parsed.orientation == 'vertical' ? {
@@ -210,22 +236,43 @@
 						toAttribute: segment < 1 ? 'left' : 'right'
 					}
 				};
+				// Loop in the cascade picking 3 elments at a time
 				var cascadeLimit = parsed.cascade.length - 2;
 				for (var i = 0; i < cascadeLimit; i += 2) {
+					// Add attributes and elements to constriants parameters
 					constraint = angular.extend(makeExternalAttrTemplate(i, cascadeLimit), {
 						element: document.getElementById(parsed.cascade[i].view),
 						toElement: document.getElementById(parsed.cascade[i + 2].view)
 					});
+					// Loop in current triplet constraints
 					var constraints = parsed.cascade[i + 1];
 					for (var j = constraints.length - 1; j >= 0; j--) {
+						// Decorate constraint parameters with relation, constant and priority
 						constraint = angular.extend({}, constraint, constraints[j]);
+						// Fix constant value
 						if (constraint.constant == 'default') {
 							constraint.constant = provider.standardSpace;
 						}
 						if (constraint.constant) {
 							constraint.constant = -constraint.constant;
 						}
+						// Collect the actual constraint result
 						res.push(this.addConstraint(constraint));
+					}
+				}
+				// Apply single element constraints
+				var cascadeLimit = parsed.cascade.length;
+				for (var i = 0; i < cascadeLimit; i += 2) {
+					var constriants = parsed.cascade[i].constraints;
+					if (!constriants || !constriants.length) {
+						continue;
+					}
+					constraint = {
+						element: document.getElementById(parsed.cascade[i].view),
+						attribute: parsed.orientation == 'vertical' ? 'height' : 'width'
+					};
+					for (var i = constriants.length - 1; i >= 0; i--) {
+						res.push(this.addConstraint(angular.extend(constraint, constriants[i])));
 					}
 				}
 				return res;
