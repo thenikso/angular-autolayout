@@ -69,4 +69,11 @@ describe('Visual Language Constraints', function() {
 		expect(greenEl[0].offsetWidth).to.equal(40);
 	});
 
+	it('should add vertical constraints', function() {
+		al.addConstraint("|-[redEl]-|");
+		al.addConstraint("V:|-[redEl]-|");
+		expect(redEl[0].offsetWidth).to.equal(80);
+		expect(redEl[0].offsetHeight).to.equal(80);
+	});
+
 });
