@@ -239,16 +239,16 @@
 				// Loop in the cascade picking 3 elments at a time
 				var cascadeLimit = parsed.cascade.length - 2;
 				for (var i = 0; i < cascadeLimit; i += 2) {
-					// Add attributes and elements to constriants parameters
-					constraint = angular.extend(makeExternalAttrTemplate(i, cascadeLimit), {
+					// Add attributes and elements to constraints parameters
+					var template = angular.extend(makeExternalAttrTemplate(i, cascadeLimit), {
 						element: document.getElementById(parsed.cascade[i].view),
 						toElement: document.getElementById(parsed.cascade[i + 2].view)
 					});
 					// Loop in current triplet constraints
 					var constraints = parsed.cascade[i + 1];
-					for (var j = constraints.length - 1; j >= 0; j--) {
+					for (var j = 0; j < constraints.length; j++) {
 						// Decorate constraint parameters with relation, constant and priority
-						constraint = angular.extend({}, constraint, constraints[j]);
+						constraint = angular.extend({}, template, constraints[j]);
 						// Fix constant value
 						if (constraint.constant == 'default') {
 							constraint.constant = provider.standardSpace;
@@ -263,16 +263,16 @@
 				// Apply single element constraints
 				var cascadeLimit = parsed.cascade.length;
 				for (var i = 0; i < cascadeLimit; i += 2) {
-					var constriants = parsed.cascade[i].constraints;
-					if (!constriants || !constriants.length) {
+					var constraints = parsed.cascade[i].constraints;
+					if (!constraints || !constraints.length) {
 						continue;
 					}
-					constraint = {
+					var template = {
 						element: document.getElementById(parsed.cascade[i].view),
 						attribute: parsed.orientation == 'vertical' ? 'height' : 'width'
 					};
-					for (var j = constriants.length - 1; j >= 0; j--) {
-						constraint = angular.extend(constraint, constriants[j]);
+					for (var j = 0; j < constraints.length; j++) {
+						constraint = angular.extend({}, template, constraints[j]);
 						if (constraint.view) {
 							constraint.toElement = document.getElementById(constraint.view);
 							constraint.toAttribute = constraint.attribute;
