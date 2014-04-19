@@ -49,6 +49,10 @@ describe('Angular Autolayout', function() {
 			al = autolayout(containerElement);
 		});
 
+		afterEach(function() {
+			containerElement.remove();
+		});
+
 		it('should throw if adding an empty constraint', function() {
 			expect(al.addConstraint).to.not.be.undefined;
 			expect(al.addConstraint).to.be.a("function");
@@ -67,17 +71,22 @@ describe('Angular Autolayout', function() {
 					height: '100px',
 					position: 'relative'
 				});
-				elA = angular.element('<div id="a" style="width:10px;height:10px"></div>');
+				elA = angular.element('<div id="elA" style="background:red;width:10px;height:10px"></div>');
 				elA.css({
 					width: '10px',
 					height: '10px',
 				});
-				elB = angular.element('<div id="b" style="width:10px;height:10px"></div>');
+				elB = angular.element('<div id="elB" style="background:blue;width:10px;height:10px"></div>');
 				elB.css({
 					width: '10px',
 					height: '10px',
 				});
 				containerElement.append(elA).append(elB);
+			});
+
+			afterEach(function() {
+				elA.remove();
+				elB.remove();
 			});
 
 			it('should throw if adding a constraint with insufficient options', function() {
@@ -372,6 +381,15 @@ describe('Angular Autolayout', function() {
 				expect(elA.data('$autolayoutExpressions')).to.be.null;
 				expect(containerElement.data('$autolayoutContainerExpressions')).to.be.null;
 				expect(containerElement.data('$autolayoutExpressions')).to.be.undefined;
+			});
+
+			it('should add a constraint with visual language', function() {
+				expect(containerElement[0].offsetWidth).to.equal(100);
+				expect(elA[0].offsetLeft).to.equal(0);
+				expect(elA[0].offsetWidth).to.equal(10);
+				al.addConstraint("|-5-[elA]-10-|");
+				expect(elA[0].offsetLeft).to.equal(5);
+				expect(elA[0].offsetWidth).to.equal(100 - 5 - 10);
 			});
 
 		});

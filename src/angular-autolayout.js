@@ -21,7 +21,8 @@
 
 		var provider = this;
 
-		provider.defaultPriority = 1000;
+		provider.standardPriority = 1000;
+		provider.standardSpace = 8;
 		provider.autolayoutInstanceDataKey = '$autolayout';
 		provider.autolayoutChildElementExpressionsDataKey = '$autolayoutExpressions';
 		provider.autolayoutContainerElementExpressionsDataKey = '$autolayoutContainerExpressions';
@@ -196,6 +197,39 @@
 		}
 
 		Autolayout.prototype.addConstraint = function(constraint) {
+			if (angular.isString(constraint)) {
+				var res = [];
+				var parsed = visualFormat.parse(constraint);
+				var makeExternalAttrTemplate = function(index, cascadeLimit) {
+					var segment = index ? (index + 1 >= cascadeLimit ? 1 : 0) : -1;
+					return parsed.orientation == 'vertical' ? {
+						attribute: segment < 0 ? 'top' : 'bottom',
+						toAttribute: segment < 1 ? 'top' : 'bottom'
+					} : {
+						attribute: segment < 0 ? 'left' : 'right',
+						toAttribute: segment < 1 ? 'left' : 'right'
+					}
+				};
+				var cascadeLimit = parsed.cascade.length - 2;
+				for (var i = 0; i < cascadeLimit; i += 2) {
+					constraint = angular.extend(makeExternalAttrTemplate(i, cascadeLimit), {
+						element: document.getElementById(parsed.cascade[i].view),
+						toElement: document.getElementById(parsed.cascade[i + 2].view)
+					});
+					var constraints = parsed.cascade[i + 1];
+					for (var j = constraints.length - 1; j >= 0; j--) {
+						constraint = angular.extend({}, constraint, constraints[j]);
+						if (constraint.constant == 'default') {
+							constraint.constant = provider.standardSpace;
+						}
+						if (constraint.constant) {
+							constraint.constant = -constraint.constant;
+						}
+						res.push(this.addConstraint(constraint));
+					}
+				}
+				return res;
+			}
 			if (!angular.isObject(constraint)) {
 				throw new Error("A constraint object argument is required.");
 			}
@@ -252,7 +286,7 @@
 				constraint.$constraint = constraint.relationFactory(
 					constraint.expression,
 					c.plus(c.times(constraint.toExpression, constraint.multiplier || 1), constraint.constant || 0),
-					constraint.priority || provider.defaultPriority
+					constraint.priority || provider.standardPriority
 				);
 			} else {
 				// Element attribute constraint
