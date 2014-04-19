@@ -254,6 +254,12 @@
 							constraint.constant = provider.standardSpace;
 						}
 						if (constraint.constant) {
+							// Invert relations and constraint to reproduce expected behaviour
+							if (constraint.relation == 'greaterOrEqual') {
+								constraint.relation = 'lessOrEqual';
+							} else if (constraint.relation == 'lessOrEqual') {
+								constraint.relation = 'greaterOrEqual';
+							}
 							constraint.constant = -constraint.constant;
 						}
 						// Collect the actual constraint result
