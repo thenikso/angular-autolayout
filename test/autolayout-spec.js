@@ -155,6 +155,7 @@ describe('Angular Autolayout', function() {
 				}).not.to.
 				throw ();
 				expect(c).to.not.be.undefined;
+				c = c[0];
 				expect(c.element).to.equal(elA);
 				expect(c.toElement).to.equal(containerElement);
 				expect(faSpy.called).to.be.true;

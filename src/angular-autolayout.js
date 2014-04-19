@@ -257,7 +257,7 @@
 							constraint.constant = -constraint.constant;
 						}
 						// Collect the actual constraint result
-						res.push(this.addConstraint(constraint));
+						res = res.concat(this.addConstraint(constraint));
 					}
 				}
 				// Apply single element constraints
@@ -279,7 +279,7 @@
 							constraint.constant = 0;
 							delete constraint.view;
 						}
-						res.push(this.addConstraint(constraint));
+						res = res.concat(this.addConstraint(constraint));
 					}
 				}
 				return res;
@@ -359,7 +359,7 @@
 			this.solver.addConstraint(constraint.$constraint);
 			this.constraints.push(constraint);
 			this.materialize();
-			return constraint;
+			return [constraint];
 		};
 
 		Autolayout.prototype.materialize = function() {
