@@ -368,6 +368,13 @@
 			return [constraint];
 		};
 
+		Autolayout.prototype.removeConstraint = function(constraint) {
+			if (!constraint || !constraint.$constraint) {
+				throw new Error("Can not remove invalid constraint: " + constraint);
+			}
+			this.solver.removeConstraint(constraint.$constraint);
+		};
+
 		Autolayout.prototype.materialize = function() {
 			// Materialize only if container element is in the document
 			var shouldContinue = false;

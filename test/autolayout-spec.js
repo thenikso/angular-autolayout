@@ -366,6 +366,30 @@ describe('Angular Autolayout', function() {
 				expect(elB[0].offsetWidth).to.equal(160);
 			});
 
+			it('should add a constraint between elements with visual language', function() {
+				expect(containerElement[0].offsetWidth).to.equal(100);
+				expect(elA[0].offsetLeft).to.equal(0);
+				expect(elA[0].offsetWidth).to.equal(10);
+				al.addConstraint("|-5-[elA]-10-|");
+				expect(elA[0].offsetLeft).to.equal(5);
+				expect(elA[0].offsetWidth).to.equal(100 - 5 - 10);
+			});
+
+			it('should remove a constriant', function() {
+				expect(elA[0].offsetLeft).to.equal(0);
+				var c = al.addConstraint("|-(==40,>=20)-[elA]");
+				expect(elA[0].offsetLeft).to.equal(40);
+				elA.css('left', '0px');
+				expect(elA[0].offsetLeft).to.equal(0);
+				al.materialize();
+				expect(elA[0].offsetLeft).to.equal(40);
+				al.removeConstraint(c[0]);
+				elA.css('left', '5px');
+				expect(elA[0].offsetLeft).to.equal(5);
+				al.materialize();
+				expect(elA[0].offsetLeft).to.equal(20);
+			});
+
 			it('should cleanup when destroyed', function() {
 				al.addConstraint({
 					element: null,
@@ -382,15 +406,6 @@ describe('Angular Autolayout', function() {
 				expect(elA.data('$autolayoutExpressions')).to.be.null;
 				expect(containerElement.data('$autolayoutContainerExpressions')).to.be.null;
 				expect(containerElement.data('$autolayoutExpressions')).to.be.undefined;
-			});
-
-			it('should add a constraint between elements with visual language', function() {
-				expect(containerElement[0].offsetWidth).to.equal(100);
-				expect(elA[0].offsetLeft).to.equal(0);
-				expect(elA[0].offsetWidth).to.equal(10);
-				al.addConstraint("|-5-[elA]-10-|");
-				expect(elA[0].offsetLeft).to.equal(5);
-				expect(elA[0].offsetWidth).to.equal(100 - 5 - 10);
 			});
 
 		});
