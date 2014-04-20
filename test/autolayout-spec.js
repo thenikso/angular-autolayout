@@ -377,17 +377,17 @@ describe('Angular Autolayout', function() {
 
 			it('should remove a constriant', function() {
 				expect(elA[0].offsetLeft).to.equal(0);
-				var c = al.addConstraint("|-(==40,>=20)-[elA]");
+				var c = al.addConstraint("|-(==40)-[elA]");
 				expect(elA[0].offsetLeft).to.equal(40);
 				elA.css('left', '0px');
 				expect(elA[0].offsetLeft).to.equal(0);
 				al.materialize();
 				expect(elA[0].offsetLeft).to.equal(40);
-				al.removeConstraint(c[0]);
+				al.removeConstraint(c);
 				elA.css('left', '5px');
 				expect(elA[0].offsetLeft).to.equal(5);
 				al.materialize();
-				expect(elA[0].offsetLeft).to.equal(20);
+				expect(elA[0].offsetLeft).to.equal(5);
 			});
 
 			it('should cleanup when destroyed', function() {

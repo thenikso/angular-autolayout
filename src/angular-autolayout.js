@@ -369,10 +369,21 @@
 		};
 
 		Autolayout.prototype.removeConstraint = function(constraint) {
+			if (angular.isArray(constraint)) {
+				for (var i = constraint.length - 1; i >= 0; i--) {
+					this.removeConstraint(constraint[i]);
+				};
+				return;
+			}
 			if (!constraint || !constraint.$constraint) {
 				throw new Error("Can not remove invalid constraint: " + constraint);
 			}
+			var idx = this.constraints.indexOf(constraint);
+			if (idx < 0) {
+				return;
+			}
 			this.solver.removeConstraint(constraint.$constraint);
+			this.constraints.splice(idx, 1);
 		};
 
 		Autolayout.prototype.materialize = function() {
