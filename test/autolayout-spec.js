@@ -194,6 +194,24 @@ describe('Angular Autolayout', function() {
 				expect(elB.css('left')).to.equal('');
 			});
 
+			it('should throw if applying conflicting constraints', function() {
+				al.addConstraint({
+					element: elA,
+					attribute: 'width',
+					relation: 'equal',
+					constant: 50
+				});
+				expect(function() {
+					al.addConstraint({
+						element: elA,
+						attribute: 'width',
+						relation: 'equal',
+						constant: 30
+					});
+				}).to.
+				throw ();
+			});
+
 			it('should materialize a constraint of an element attribute', function() {
 				expect(elA[0].offsetWidth).to.equal(10);
 				al.addConstraint({

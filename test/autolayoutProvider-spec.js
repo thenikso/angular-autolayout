@@ -33,10 +33,6 @@ describe('Angular Autolayout Provider', function() {
 		expect(c).to.equal(window.c);
 	});
 
-	it('should define a `standardPriority` property', function() {
-		expect(autolayoutProvider.standardPriority).not.to.undefined;
-	});
-
 	it('should define relations', function() {
 		expect(autolayoutProvider.relations).to.not.be.undefined;
 		expect(autolayoutProvider.relations.equal).to.be.a("function");

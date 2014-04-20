@@ -21,7 +21,6 @@
 
 		var provider = this;
 
-		provider.standardPriority = 1000;
 		provider.standardSpace = 8;
 		provider.autolayoutInstanceDataKey = '$autolayout';
 		provider.autolayoutChildElementExpressionsDataKey = '$autolayoutExpressions';
@@ -29,13 +28,31 @@
 
 		provider.relations = {
 			equal: function(a, b, priority) {
-				return new c.Equation(a, b, c.Strength.medium, priority || 0)
+				var e;
+				if (priority) {
+					e = new c.Equation(a, b, new c.Strength("priority", 0, 0, priority));
+				} else {
+					e = new c.Equation(a, b, c.Strength.required);
+				}
+				return e;
 			},
 			greaterOrEqual: function(a, b, priority) {
-				return new c.Inequality(a, c.GEQ, b, c.Strength.medium, priority || 0);
+				var e;
+				if (priority) {
+					e = new c.Inequality(a, c.GEQ, b, new c.Strength("priority", 0, 0, priority));
+				} else {
+					e = new c.Inequality(a, c.GEQ, b, c.Strength.required);
+				}
+				return e;
 			},
 			lessOrEqual: function(a, b, priority) {
-				return new c.Inequality(a, c.LEQ, b, c.Strength.medium, priority || 0);
+				var e;
+				if (priority) {
+					e = new c.Inequality(a, c.LEQ, b, new c.Strength("priority", 0, 0, priority));
+				} else {
+					e = new c.Inequality(a, c.LEQ, b, c.Strength.required);
+				}
+				return e;
 			}
 		};
 
@@ -346,7 +363,7 @@
 				constraint.$constraint = constraint.relationFactory(
 					constraint.expression,
 					c.plus(c.times(constraint.toExpression, constraint.multiplier || 1), constraint.constant || 0),
-					constraint.priority || provider.standardPriority
+					constraint.priority
 				);
 			} else {
 				// Element attribute constraint
@@ -356,7 +373,7 @@
 				constraint.$constraint = constraint.relationFactory(
 					constraint.expression,
 					constraint.constant,
-					constraint.priority || provider.standardPriority
+					constraint.priority
 				);
 			}
 			if (!constraint.$constraint) {
