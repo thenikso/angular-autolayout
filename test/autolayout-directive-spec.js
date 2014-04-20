@@ -52,7 +52,7 @@ describe('Autolayout Directive', function() {
 	});
 
 	it('should add multiple constraints', function() {
-		containerEl.append('<al-constraint visual-format="V:|-5-[redEl]-5-|"/>');
+		containerEl.append('<al-constraint>V:|-5-[redEl]-5-|</al-constraint>');
 		containerEl.append('<al-constraint visual-format="|[redEl(==blueEl)][blueEl]|"/>');
 		containerEl.append('<al-constraint visual-format="V:|[blueEl]-5-|"/>');
 		$compile(containerEl)(scope);

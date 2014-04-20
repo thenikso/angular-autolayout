@@ -519,7 +519,7 @@
 				terminal: true,
 				compile: function alConstraintCompile(element, attrs) {
 					// Collect constraint options
-					var visualFormat = attrs.visualFormat;
+					var visualFormat = (attrs.visualFormat || element.text()).trim();
 					var constraintOptions = {
 						element: attrs.element,
 						attribute: attrs.attribute,
