@@ -552,6 +552,9 @@
 							constraintOptions.toElement = document.getElementById(constraintOptions.toElement);
 							cs = al.addConstraint(constraintOptions);
 						}
+						scope.$on('$destroy', function() {
+							al.removeConstraint(cs);
+						});
 					}
 				}
 			}

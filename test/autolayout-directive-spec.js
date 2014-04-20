@@ -51,4 +51,29 @@ describe('Autolayout Directive', function() {
 		expect(redEl[0].offsetWidth).to.equal(55);
 	});
 
+	it('should add multiple constraints', function() {
+		containerEl.append('<al-constraint visual-format="V:|-5-[redEl]-5-|"/>');
+		containerEl.append('<al-constraint visual-format="|[redEl(==blueEl)][blueEl]|"/>');
+		containerEl.append('<al-constraint visual-format="V:|[blueEl]-5-|"/>');
+		$compile(containerEl)(scope);
+		expect(redEl[0].offsetWidth).to.equal(50);
+		expect(redEl[0].offsetTop).to.equal(5);
+		expect(redEl[0].offsetHeight).to.equal(90);
+		expect(blueEl[0].offsetWidth).to.equal(50);
+		expect(blueEl[0].offsetTop).to.equal(0);
+		expect(blueEl[0].offsetHeight).to.equal(95);
+	});
+
+	it('should remove a constraint when the element is removed', function() {
+		scope.testCond = 1;
+		containerEl.append('<al-constraint ng-if="testCond == 1" visual-format="[redEl(==50)]"/>');
+		containerEl.append('<al-constraint ng-if="testCond == 2" visual-format="[redEl(==30)]"/>');
+		$compile(containerEl)(scope);
+		scope.$digest();
+		expect(redEl[0].offsetWidth).to.equal(50);
+		scope.testCond = 2;
+		scope.$digest();
+		expect(redEl[0].offsetWidth).to.equal(30);
+	});
+
 });
