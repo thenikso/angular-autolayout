@@ -346,6 +346,15 @@ describe('Angular Autolayout', function() {
 				expect(containerElement[0].offsetWidth).to.equal(200);
 				expect(elA[0].offsetLeft).to.equal(10);
 				expect(elA[0].offsetWidth).to.equal(180);
+				containerElement.css({
+					width: '400px',
+					height: '400px'
+				});
+				al.update();
+				expect(containerElement[0].offsetLeft).to.equal(15);
+				expect(containerElement[0].offsetWidth).to.equal(400);
+				expect(elA[0].offsetLeft).to.equal(10);
+				expect(elA[0].offsetWidth).to.equal(380);
 			});
 
 			it('should update constraints of child autolayouts', function() {

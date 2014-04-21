@@ -103,7 +103,7 @@
 						value: widthValue
 					});
 					if (el == contEl) {
-						solver.addStay(widthExp).addEditVar(widthExp);
+						solver.addStay(widthExp);
 					} else {
 						solver.addConstraint(new c.Inequality(widthExp, c.GEQ, 0, c.Strength.required));
 						solver.addConstraint(new c.Inequality(widthExp, c.GEQ, widthValue, c.Strength.weak));
@@ -125,7 +125,7 @@
 						value: heightValue
 					});
 					if (el == contEl) {
-						solver.addStay(heightExp).addEditVar(heightExp);
+						solver.addStay(heightExp);
 					} else {
 						solver.addConstraint(new c.Inequality(heightExp, c.GEQ, 0, c.Strength.required));
 						solver.addConstraint(new c.Inequality(heightExp, c.GEQ, heightValue, c.Strength.weak));
@@ -503,23 +503,35 @@
 		};
 
 		Autolayout.prototype.update = function() {
-			var ctxs = this.containerElement.data(provider.autolayoutContainerElementExpressionsDataKey);
-			var updater;
-			var didEdit = false;
+			var exps = this.containerElement.data(provider.autolayoutContainerElementExpressionsDataKey);
 			var el = this.containerElement[0];
-			for (var prop in ctxs) {
+			// Build an updater array of functions to call to update required
+			// contaner element attributes.
+			var prepareUpdates = {}, updates = {}, updatesCount = 0;
+			var updater;
+			for (var prop in exps) {
 				updater = provider.attributeConverters[prop];
 				if (!updater || !updater.update) {
 					continue;
 				}
-				if (!didEdit) {
-					didEdit = true;
-					this.solver.beginEdit();
-				}
-				updater.update(el, ctxs[prop], this.solver);
+				updatesCount++;
+				prepareUpdates[prop] = updater.prepareUpdate || function(exp, solver) {
+					solver.addEditVar(exp);
+				};
+				updates[prop] = updater.update;
 			}
-			if (!didEdit) {
+			// Return if no updates required
+			if (updatesCount = 0) {
 				return;
+			}
+			// Prepare updates
+			for (var prop in prepareUpdates) {
+				prepareUpdates[prop](exps[prop], this.solver);
+			}
+			// Perform updates
+			this.solver.beginEdit();
+			for (var prop in updates) {
+				updates[prop](el, exps[prop], this.solver);
 			}
 			// Resolve and materialize update
 			this.solver.resolve();
