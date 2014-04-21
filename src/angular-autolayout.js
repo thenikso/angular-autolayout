@@ -351,7 +351,9 @@
 			if (constraint.element[0] != this.containerElement[0] && constraint.element[0].parentNode != this.containerElement[0]) {
 				throw new Error("The element: " + constraint.element[0] + " should be a direct child of: " + this.containerElement[0]);
 			}
-			constraint.element.css('position', 'absolute');
+			if (constraint.element[0] != this.containerElement[0]) {
+				constraint.element.css('position', 'absolute');
+			}
 			constraint.expression = angular.isFunction(constraint.attribute) ? constraint.attribute(
 				constraint.element,
 				this.containerElement,
@@ -373,7 +375,9 @@
 				if (constraint.toElement[0] != this.containerElement[0] && constraint.toElement[0].parentNode != this.containerElement[0]) {
 					throw new Error("The toElement: " + constraint.toElement[0] + " should be a direct child of: " + this.containerElement[0]);
 				}
-				constraint.toElement.css('position', 'absolute');
+				if (constraint.toElement[0] != this.containerElement[0]) {
+					constraint.toElement.css('position', 'absolute');
+				}
 				constraint.toExpression = angular.isFunction(constraint.toAttribute) ? constraint.toAttribute(
 					constraint.toElement,
 					this.containerElement,
