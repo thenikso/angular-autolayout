@@ -166,6 +166,34 @@
 					provider.materializeExpressionValue('top', el, exp.topPartExp);
 					provider.materializeExpressionValue('height', el, exp.heightPartExp);
 				},
+			},
+			centerX: {
+				create: function(el, contEl, solver) {
+					var leftExp = provider.expressionForElementAttribute('left', el, contEl, solver);
+					var widthExp = provider.expressionForElementAttribute('width', el, contEl, solver);
+					var centerXExp = new c.Expression(widthExp).divide(2).plus(leftExp);
+					centerXExp.leftPartExp = leftExp;
+					centerXExp.widthPartExp = widthExp;
+					return centerXExp;
+				},
+				materialize: function(el, exp) {
+					provider.materializeExpressionValue('left', el, exp.leftPartExp);
+					provider.materializeExpressionValue('width', el, exp.widthPartExp);
+				}
+			},
+			centerY: {
+				create: function(el, contEl, solver) {
+					var topExp = provider.expressionForElementAttribute('top', el, contEl, solver);
+					var heightExp = provider.expressionForElementAttribute('height', el, contEl, solver);
+					var centerYExp = new c.Expression(heightExp).divide(2).plus(topExp);
+					centerYExp.topPartExp = topExp;
+					centerYExp.heightPartExp = heightExp;
+					return centerYExp;
+				},
+				materialize: function(el, exp) {
+					provider.materializeExpressionValue('top', el, exp.topPartExp);
+					provider.materializeExpressionValue('height', el, exp.heightPartExp);
+				}
 			}
 		};
 

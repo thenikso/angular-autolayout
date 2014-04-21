@@ -85,4 +85,14 @@ describe('Autolayout Directive', function() {
 		expect(greenEl[0].offsetTop).to.equal(5);
 	});
 
+	it('should support center allignment', function() {
+		containerEl.append('<al-constraint>[redEl(==40)]</al-constraint>');
+		containerEl.append('<al-constraint>V:[redEl(==30)]</al-constraint>');
+		containerEl.append('<al-constraint element="redEl" attribute="centerX" relation="equal" to-attribute="centerX"></al-constraint>');
+		containerEl.append('<al-constraint element="redEl" attribute="centerY" relation="equal" to-attribute="centerY"></al-constraint>');
+		$compile(containerEl)(scope);
+		expect(redEl[0].offsetLeft).to.equal((100 - 40) / 2);
+		expect(redEl[0].offsetTop).to.equal((100 - 30) / 2);
+	});
+
 });
