@@ -534,8 +534,11 @@
 				updates[prop](el, exps[prop], this.solver);
 			}
 			// Resolve and materialize update
-			this.solver.resolve();
-			this.solver.endEdit();
+			try {
+				this.solver.endEdit();
+			} catch (e) {
+				this.solver.removeAllEditVars();
+			}
 			this.materialize();
 			// update child autolayout containers
 			var children = this.containerElement.children();
