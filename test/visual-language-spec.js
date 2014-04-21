@@ -76,4 +76,14 @@ describe('Visual Language Constraints', function() {
 		expect(redEl[0].offsetHeight).to.equal(80);
 	});
 
+	it('should accept an `align` option', function() {
+		al.addConstraint("|[redEl][blueEl][greenEl]|", {
+			align: 'top'
+		});
+		al.addConstraint("V:|-5-[redEl]");
+		expect(redEl[0].offsetTop).to.equal(5);
+		expect(blueEl[0].offsetTop).to.equal(5);
+		expect(greenEl[0].offsetTop).to.equal(5);
+	});
+
 });

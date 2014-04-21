@@ -223,7 +223,7 @@
 			}
 		}
 
-		Autolayout.prototype.addConstraint = function(constraint) {
+		Autolayout.prototype.addConstraint = function(constraint, options) {
 			if (angular.isString(constraint)) {
 				var res = [];
 				// Parse visual format language to:
@@ -263,6 +263,16 @@
 						toAttribute: segment < 1 ? 'left' : 'right'
 					}
 				};
+				// An options.align can be scpecified to add additional constraints
+				// to the opposite orientation of all the elements.
+				var alignConstraint = null;
+				if (options && options.align) {
+					alignConstraint = {
+						attribute: options.align,
+						relation: 'equal',
+						toAttribute: options.align
+					};
+				}
 				// Loop in the cascade picking 3 elments at a time
 				var cascadeLimit = parsed.cascade.length - 2;
 				for (var i = 0; i < cascadeLimit; i += 2) {
@@ -291,6 +301,10 @@
 						}
 						// Collect the actual constraint result
 						res = res.concat(this.addConstraint(constraint));
+					}
+					// Add align constraint
+					if (alignConstraint && template.element && template.toElement) {
+						res = res.concat(this.addConstraint(angular.extend({}, template, alignConstraint)));
 					}
 				}
 				// Apply single element constraints
@@ -530,11 +544,17 @@
 						constant: parseFloat(attrs.constant) || 0,
 						priority: parseInt(attrs.priority) || undefined
 					};
+					var options = {
+						align: attrs.align
+					};
 
 					// Replace element with comment and remove it from the DOM
 					var description = '';
 					if (visualFormat) {
 						description = visualFormat;
+						if (options.align) {
+							description += ' (align: ' + options.align + ')'
+						}
 					} else {
 						description = JSON.stringify(constraintOptions);
 					}
@@ -546,7 +566,7 @@
 						var al = autolayout(element.parent());
 						var cs = null;
 						if (visualFormat) {
-							cs = al.addConstraint(visualFormat);
+							cs = al.addConstraint(visualFormat, options);
 						} else {
 							constraintOptions.element = document.getElementById(constraintOptions.element);
 							constraintOptions.toElement = document.getElementById(constraintOptions.toElement);

@@ -32,29 +32,29 @@ describe('Autolayout Directive', function() {
 	});
 
 	it('should remove the constraint DOM element', function() {
-		var cEl = angular.element('<al-constraint visual-format="|[redEl][blueEl]|"/>');
+		var cEl = angular.element('<al-constraint visual-format="|[redEl][blueEl]|"></al-constraint>');
 		containerEl.append(cEl);
 		$compile(containerEl)(scope);
 		expect(cEl.parent()[0]).to.be.undefined;
 	});
 
 	it('should add a constraint with visual language', function() {
-		containerEl.append('<al-constraint visual-format="|[redEl(==blueEl)][blueEl]|"/>');
+		containerEl.append('<al-constraint visual-format="|[redEl(==blueEl)][blueEl]|"></al-constraint>');
 		$compile(containerEl)(scope);
 		expect(redEl[0].offsetWidth).to.equal(50);
 		expect(blueEl[0].offsetWidth).to.equal(50);
 	});
 
 	it('should add a constraint with parameters', function() {
-		containerEl.append('<al-constraint element="redEl" attribute="width" relation="greaterOrEqual" to-element="containerEl" to-attribute="width" multiplier="0.5" constant="5"/>');
+		containerEl.append('<al-constraint element="redEl" attribute="width" relation="greaterOrEqual" to-element="containerEl" to-attribute="width" multiplier="0.5" constant="5"></al-constraint>');
 		$compile(containerEl)(scope);
 		expect(redEl[0].offsetWidth).to.equal(55);
 	});
 
 	it('should add multiple constraints', function() {
 		containerEl.append('<al-constraint>V:|-5-[redEl]-5-|</al-constraint>');
-		containerEl.append('<al-constraint visual-format="|[redEl(==blueEl)][blueEl]|"/>');
-		containerEl.append('<al-constraint visual-format="V:|[blueEl]-5-|"/>');
+		containerEl.append('<al-constraint visual-format="|[redEl(==blueEl)][blueEl]|"></al-constraint>');
+		containerEl.append('<al-constraint visual-format="V:|[blueEl]-5-|"></al-constraint>');
 		$compile(containerEl)(scope);
 		expect(redEl[0].offsetWidth).to.equal(50);
 		expect(redEl[0].offsetTop).to.equal(5);
@@ -66,14 +66,23 @@ describe('Autolayout Directive', function() {
 
 	it('should remove a constraint when the element is removed', function() {
 		scope.testCond = 1;
-		containerEl.append('<al-constraint ng-if="testCond == 1" visual-format="[redEl(==50)]"/>');
-		containerEl.append('<al-constraint ng-if="testCond == 2" visual-format="[redEl(==30)]"/>');
+		containerEl.append('<al-constraint ng-if="testCond == 1" visual-format="[redEl(==50)]"></al-constraint>');
+		containerEl.append('<al-constraint ng-if="testCond == 2" visual-format="[redEl(==30)]"></al-constraint>');
 		$compile(containerEl)(scope);
 		scope.$digest();
 		expect(redEl[0].offsetWidth).to.equal(50);
 		scope.testCond = 2;
 		scope.$digest();
 		expect(redEl[0].offsetWidth).to.equal(30);
+	});
+
+	it('should accept an align attribute for visual language type', function() {
+		containerEl.append('<al-constraint align="top">|-[redEl(==blueEl)]-[blueEl(==greenEl)]-[greenEl]-|</al-constraint>');
+		containerEl.append('<al-constraint>V:|-5-[redEl(==blueEl,==greenEl)]-|</al-constraint>');
+		$compile(containerEl)(scope);
+		expect(redEl[0].offsetTop).to.equal(5);
+		expect(blueEl[0].offsetTop).to.equal(5);
+		expect(greenEl[0].offsetTop).to.equal(5);
 	});
 
 });
