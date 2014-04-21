@@ -37,15 +37,15 @@ view
 
 connection
   = "-" predicateList:predicateList "-" { return predicateList }
-  / "-" { return [{ relation: 'equal', constant: 'default' }] }
-  / "" { return [{ relation: 'equal', constant: 0 }] }
+  / "-" { return [{ relation: 'equal', constant: 'default', $parserOffset: offset() }] }
+  / "" { return [{ relation: 'equal', constant: 0, $parserOffset: offset() }] }
 
 predicateList
   = simplePredicate
   / predicateListWithParens
 
 simplePredicate
-  = n:number { return [{ relation: 'equal', constant: n }] }
+  = n:number { return [{ relation: 'equal', constant: n, $parserOffset: offset() }] }
 
 predicateListWithParens
   = "(" p:predicate ps:("," predicate)* ")"
@@ -56,9 +56,9 @@ predicate
   { return extend({ relation: 'equal' }, (r || {}), o, (p ? p[1]: {})) }
 
 relation
-  = "==" { return { relation: 'equal' } }
-  / "<=" { return { relation: 'lessOrEqual' } }
-  / ">=" { return { relation: 'greaterOrEqual' } }
+  = "==" { return { relation: 'equal', $parserOffset: offset() } }
+  / "<=" { return { relation: 'lessOrEqual', $parserOffset: offset() } }
+  / ">=" { return { relation: 'greaterOrEqual', $parserOffset: offset() } }
 
 objectOfPredicate
   = constant

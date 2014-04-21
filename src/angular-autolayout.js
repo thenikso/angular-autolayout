@@ -279,6 +279,16 @@
 				// 	]
 				// }
 				var parsed = visualFormat.parse(constraint);
+				// Utility for error reporting
+				var constraintString = constraint;
+				var conflictAtPosition = function(pos) {
+					var err = 'Conflict when adding constraint:\n' + constraintString + '\n';
+					for (var i = pos - 1; i >= 0; i--) {
+						err += '-';
+					}
+					err += '^';
+					return new Error(err);
+				};
 				// Generate constraint parameters object template for external attributes
 				// based on the position of the index in the parsed constraints cascade
 				var makeExternalAttrTemplate = function(index, cascadeLimit) {
@@ -328,7 +338,11 @@
 							constraint.constant = -constraint.constant;
 						}
 						// Collect the actual constraint result
-						res = res.concat(this.addConstraint(constraint));
+						try {
+							res = res.concat(this.addConstraint(constraint));
+						} catch (e) {
+							throw conflictAtPosition(constraint.$parserOffset);
+						}
 					}
 					// Add align constraint
 					if (alignConstraint && template.element && template.toElement) {
@@ -354,7 +368,11 @@
 							constraint.constant = 0;
 							delete constraint.view;
 						}
-						res = res.concat(this.addConstraint(constraint));
+						try {
+							res = res.concat(this.addConstraint(constraint));
+						} catch (e) {
+							throw conflictAtPosition(constraint.$parserOffset);
+						}
 					}
 				}
 				return res;
