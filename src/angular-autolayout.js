@@ -341,7 +341,7 @@
 						try {
 							res = res.concat(this.addConstraint(constraint));
 						} catch (e) {
-							throw conflictAtPosition(constraint.$parserOffset);
+							throw (e instanceof c.RequiredFailure) ? conflictAtPosition(constraint.$parserOffset) : e;
 						}
 					}
 					// Add align constraint
@@ -371,7 +371,7 @@
 						try {
 							res = res.concat(this.addConstraint(constraint));
 						} catch (e) {
-							throw conflictAtPosition(constraint.$parserOffset);
+							throw (e instanceof c.RequiredFailure) ? conflictAtPosition(constraint.$parserOffset) : e;
 						}
 					}
 				}
