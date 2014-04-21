@@ -547,15 +547,28 @@
 				prepareUpdates[prop](exps[prop], this.solver);
 			}
 			// Perform updates
-			this.solver.beginEdit();
-			for (var prop in updates) {
-				updates[prop](el, exps[prop], this.solver);
-			}
-			// Resolve and materialize update
 			try {
+				this.solver.beginEdit();
+				for (var prop in updates) {
+					updates[prop](el, exps[prop], this.solver);
+				}
 				this.solver.endEdit();
 			} catch (e) {
-				this.solver.removeAllEditVars();
+				// FIXME Unspeakable disaster. Rebuilding everything
+				var materialize = this.materialize;
+				this.materialize = function() {};
+				this.containerElement.data(provider.autolayoutContainerElementExpressionsDataKey, null);
+				var children = this.containerElement.children();
+				for (var i = children.length - 1; i >= 0; i--) {
+					angular.element(children[i]).data(provider.autolayoutChildElementExpressionsDataKey, null);
+				}
+				this.solver = new c.SimplexSolver();
+				var constraints = this.constraints;
+				this.constraints = [];
+				for (var i = constraints.length - 1; i >= 0; i--) {
+					this.addConstraint(constraints[i]);
+				};
+				this.materialize = materialize;
 			}
 			this.materialize();
 			// update child autolayout containers
@@ -666,6 +679,7 @@
 	angular.module('autolayout').directive('alUpdateOnResize', ['autolayout',
 		function(autolayout) {
 			var autolayoutsToUpdate = [];
+			var locked = false;
 			var resizeHandler = function() {
 				for (var i = autolayoutsToUpdate.length - 1; i >= 0; i--) {
 					autolayoutsToUpdate[i].update();
