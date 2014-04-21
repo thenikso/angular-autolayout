@@ -95,7 +95,7 @@ describe('Autolayout Directive', function() {
 		expect(redEl[0].offsetTop).to.equal((100 - 30) / 2);
 	});
 
-	it('should support `al-update-on` attribute on container element', function() {
+	it('should support `al-update-on` directive on container element', function() {
 		var testEventName = 'testEvent';
 		containerEl.append('<al-constraint>|-10-[redEl]-10-|</al-constraint>');
 		containerEl.attr('al-update-on', testEventName);

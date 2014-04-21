@@ -632,13 +632,48 @@
 		function(autolayout) {
 			return {
 				restrict: 'AC',
-				link: function alUpdateOnLink(scope, element, attrs) {
+				link: function(scope, element, attrs) {
 					if (!attrs.alUpdateOn) {
 						throw new Error("Event name required in `al-update-on`");
 					}
 					var al = autolayout(element);
 					scope.$on(attrs.alUpdateOn, function() {
 						al.update();
+					});
+				}
+			}
+		}
+	]);
+
+	angular.module('autolayout').directive('alUpdateOnResize', ['autolayout',
+		function(autolayout) {
+			var autolayoutsToUpdate = [];
+			var resizeHandler = function() {
+				for (var i = autolayoutsToUpdate.length - 1; i >= 0; i--) {
+					autolayoutsToUpdate[i].update();
+				};
+			};
+
+			function addAutolayoutToUpdate(al) {
+				if (autolayoutsToUpdate.length == 0) {
+					angular.element(window).bind('resize', resizeHandler);
+				}
+				autolayoutsToUpdate.push(al);
+			}
+
+			function removeAutolayoutToUpdate(al) {
+				autolayoutsToUpdate.splice(autolayoutsToUpdate.indexOf(al), 1);
+				if (autolayoutsToUpdate.length == 0) {
+					angular.element(window).unbind('resize', resizeHandler);
+				}
+			}
+			return {
+				restrict: 'AC',
+				link: function(scope, element, attrs) {
+					var al = autolayout(element);
+					addAutolayoutToUpdate(al);
+					scope.$on('$destroy', function() {
+						removeAutolayoutToUpdate(al);
 					});
 				}
 			}
