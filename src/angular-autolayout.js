@@ -218,7 +218,7 @@
 			if (angular.isDefined(exp)) {
 				return exp;
 			}
-			// Generate autlayout context for property variable
+			// Generate autolayout context for property variable
 			return exps[prop] = creator(el[0], contEl[0], solver);
 		};
 
@@ -608,6 +608,23 @@
 							al.removeConstraint(cs);
 						});
 					}
+				}
+			}
+		}
+	]);
+
+	angular.module('autolayout').directive('alUpdateOn', ['autolayout',
+		function(autolayout) {
+			return {
+				restrict: 'AC',
+				link: function alUpdateOnLink(scope, element, attrs) {
+					if (!attrs.alUpdateOn) {
+						throw new Error("Event name required in `al-update-on`");
+					}
+					var al = autolayout(element);
+					scope.$on(attrs.alUpdateOn, function() {
+						al.update();
+					});
 				}
 			}
 		}

@@ -95,4 +95,15 @@ describe('Autolayout Directive', function() {
 		expect(redEl[0].offsetTop).to.equal((100 - 30) / 2);
 	});
 
+	it('should support `al-update-on` attribute on container element', function() {
+		var testEventName = 'testEvent';
+		containerEl.append('<al-constraint>|-10-[redEl]-10-|</al-constraint>');
+		containerEl.attr('al-update-on', testEventName);
+		$compile(containerEl)(scope);
+		expect(redEl[0].offsetWidth).to.equal(80);
+		containerEl.css('width', '50px')
+		scope.$broadcast(testEventName);
+		expect(redEl[0].offsetWidth).to.equal(30);
+	});
+
 });
