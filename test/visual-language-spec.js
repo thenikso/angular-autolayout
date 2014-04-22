@@ -63,6 +63,12 @@ describe('Visual Language Constraints', function() {
 	});
 
 	it('should add constraints between multiple elements', function() {
+		al.addConstraint("[redEl(==blueEl,==40)]-5-[blueEl]");
+		expect(redEl[0].offsetWidth).to.equal(40);
+		expect(blueEl[0].offsetLeft).to.equal(45);
+	});
+
+	it('should add constraints between multiple elements and container', function() {
 		al.addConstraint("|-[redEl(==blueEl)]-[blueEl]-[greenEl(>=40)]-|");
 		expect(redEl[0].offsetWidth).to.equal(10);
 		expect(blueEl[0].offsetWidth).to.equal(10);

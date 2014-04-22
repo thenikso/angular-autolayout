@@ -290,16 +290,22 @@
 					return new Error(err);
 				};
 				// Generate constraint parameters object template for external attributes
-				// based on the position of the index in the parsed constraints cascade
-				var makeExternalAttrTemplate = function(index, cascadeLimit) {
-					var segment = index ? (index + 1 >= cascadeLimit ? 1 : 0) : -1;
-					return parsed.orientation == 'vertical' ? {
+				// based on wether the template elements are the container element.
+				var containerElement = this.containerElement[0];
+				var addExternalAttrs = function(template) {
+					var segment = 0;
+					if (!template.element || template.element == containerElement) {
+						segment = -1;
+					} else if (!template.toElement || template.toElement == containerElement) {
+						segment = 1;
+					}
+					return angular.extend(template, parsed.orientation == 'vertical' ? {
 						attribute: segment < 0 ? 'top' : 'bottom',
 						toAttribute: segment < 1 ? 'top' : 'bottom'
 					} : {
 						attribute: segment < 0 ? 'left' : 'right',
 						toAttribute: segment < 1 ? 'left' : 'right'
-					}
+					})
 				};
 				// An options.align can be scpecified to add additional constraints
 				// to the opposite orientation of all the elements.
@@ -315,7 +321,7 @@
 				var cascadeLimit = parsed.cascade.length - 2;
 				for (var i = 0; i < cascadeLimit; i += 2) {
 					// Add attributes and elements to constraints parameters
-					var template = angular.extend(makeExternalAttrTemplate(i, cascadeLimit), {
+					var template = addExternalAttrs({
 						element: document.getElementById(parsed.cascade[i].view),
 						toElement: document.getElementById(parsed.cascade[i + 2].view)
 					});
