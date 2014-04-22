@@ -14,7 +14,7 @@ Add `angular-autolayout` to your imported scripts:
 
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-autolayout/dit/angular-autolayout.min.js"></script>
-    
+
 Require `autolayout` in your AngularJS app module:
 
 ```
@@ -29,8 +29,8 @@ You can now use the `al-constraint` directive to add layout constraints with bot
 
 		<al-constraint align="top">|-[myLeftBox(==myRightBox)]-[myRightBox]-|</al-constraint>
 		<al-constriant>V:|-[myLeftBox]-|</al-constraint>
-		<al-constraint 
-			element="myLeftBox" 
+		<al-constraint
+			element="myLeftBox"
 			attribute="height"
 			relation="equal"
 			to-element="myRightBox"
@@ -64,7 +64,7 @@ The preferred way of usage of angular-autolayout is via the provided directives:
 
 **al-constraint**
 
-The `al-constraint` is the core directive that will add layout constraints to its sibling elements relative to its parent element. 
+The `al-constraint` is the core directive that will add layout constraints to its sibling elements relative to its parent element.
 
 It can be used with both visual language format constraints:
 
@@ -81,8 +81,8 @@ or equivalent:
 Or it can be used in a form that will map to the programmatic API:
 
 ```
-<al-constraint 
-	element="myLeftBox" 
+<al-constraint
+	element="myLeftBox"
 	attribute="height"
 	relation="equal"
 	to-element="myRightBox"
@@ -102,12 +102,12 @@ This is an attribute directive to be used on an autolayout container element. It
 		<div id="myBox">Content</div>
 		<al-constraint>|[myBox]|</al-constraint>
 	</div>
-	
+
 In you controller:
 
 	angular.element("#containerDiv").css("width", "50%");
 	scope.$broadcast("myEvent"); // This will trigger an update on the containerDiv's autolayout
-	
+
 **al-autolayout-on-resize**
 
 The `al-autolayout-on-resize` attribute directive will update the autolayout of the container element it's defined on upon `window` resize. Because the update of an autolayout affects all the child autolayouts, this directive needs to be used only on the topmost autolayout in a hierarchy. For example:
@@ -116,7 +116,7 @@ The `al-autolayout-on-resize` attribute directive will update the autolayout of 
 		<div id="myBox">Content</div>
 		<al-constraint>|[myBox]|</al-constraint>
 	</div>
-	
+
 
 ### Service
 
@@ -131,13 +131,13 @@ The only injectable service exposed is called `autolayout`. With it you can acce
 - **`<autolayout>.addConstraint(constraint, options)`**
 
 	This is the main method of the library. It adds a constraint to the current layout and immediately applies it. It returns an `array` of constraints objects that can be used to remove specific constraints with `removeConstraint`. A single constraint object will resolve in the constraint expression:
-	
+
 	*element.attribute \<relation> toElement.toAttribute * multiplier + constant*
-	
+
 	The parameters are:
-	
+
 	**constraint**
-	
+
 	- A `string` in [Visual Format Language][5] that will result in the generation of one or more constraints;
 	- An `object` with the following keys:
 		- `element` is the first **DOM element** affected by the constraint. It can be `null` to refer to the container element used in the constructor. This element should either be the container element or a direct child of it;
@@ -147,21 +147,21 @@ The only injectable service exposed is called `autolayout`. With it you can acce
 		- `multiplier` defaults to **1.0** and it's applied to the generated constraint expression as shown above;
 		- `constant` defaults to **0** and it's applied to the generated constraint expression as shown above;
 		- `priority`, if specified, makes the constraint not required and will respect other constraints priorities in order to resolve conflicting layout requests.
-		
+
 	**options**
-	
+
 	Options are currently considered only if the `constraint` parameter is a visual format language string. The available options in this case is:
-	
+
 	- `align` should be an attribute converter to be used in equation constraints between child elements found in a visual format language string. This will provide a convenient way to add such common constraints. See the examples for a more obvious explanation.
-	
+
 - **`<autolayout>.removeConstriant(constraint)`**
 
 	Removes a constraint object or all the constraints in an array.
-	
+
 - **`<autolayout>.materialize()`**
 
 	Materialize all the constrained variables values into CSS layout attributes. This method is automatically called when adding a new constraint.
-	
+
 - **`<autolayout>.update()`**
 
 	Some container element's attributes may be updated with external values as they are never materialized by an autolayout having that element as it's container. When that happen, this method will update those values using converters' `prepareUpdate` and `update` functions and re-materialize the updated constraints values. This operation will be recursively applied to child autolayouts instances.
@@ -198,7 +198,7 @@ The provider also exposes methods that are used to interact with `attributeConve
 - `expressionForElementAttribute`: is a `function(propertyName, element, containerElement, solver)` that can be used to execute the `create` function of a converter with the given property name, returning a Cassowary.js expression or variable. This method cashes requested expressions in the element's data using `autolayoutChildElementExpressionsDataKey` or `autolayoutContainerElementExpressionsDataKey`; this provides the desired property of always referring to the same Cassowary.js expression for a given element's attribute. To see how this method can be used in a custom attribute converter, take a look at the provided `width` converter in the sources;
 - `materializeExpressionValue`: is a `function(propertyName, element, expression)` that has no expected return value and can be used to execute the `materialize` function of a converter.
 
-	
+
 **Cassowary.js**
 
 [Cassowary.js][2] is included and provided as a constant via the injectable `cassowary`. Being it a constant, it can also be injected in the `config` phase to be used within `autolayoutProvider`'s configuration parameters.
@@ -240,7 +240,15 @@ Some tasks that can be foreseen are:
 
 ## License
 
-MIT
+The MIT License (MIT)
+
+Copyright (c) 2014 Nicola Peduzzi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [1]: http://en.wikipedia.org/wiki/Constraint_programming
 [2]: https://github.com/slightlyoff/cassowary.js
