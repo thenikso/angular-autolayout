@@ -71,7 +71,7 @@
 						value: topValue
 					});
 					if (el == contEl) {
-						solver.addStay(topExp);
+						solver.addStay(topExp, c.Strength.required);
 					}
 					return topExp;
 				},
@@ -87,7 +87,7 @@
 						value: leftValue
 					});
 					if (el == contEl) {
-						solver.addStay(leftExp);
+						solver.addStay(leftExp, c.Strength.required);
 					}
 					return leftExp;
 				},
@@ -103,7 +103,7 @@
 						value: widthValue
 					});
 					if (el == contEl) {
-						solver.addStay(widthExp);
+						widthExp.$stayConst = solver.addStay(widthExp, c.Strength.required);
 					} else {
 						solver.addConstraint(new c.Inequality(widthExp, c.GEQ, 0, c.Strength.required));
 						solver.addConstraint(new c.Inequality(widthExp, c.GEQ, widthValue, c.Strength.weak));
@@ -111,7 +111,9 @@
 					return widthExp;
 				},
 				update: function(contEl, exp, solver) {
+					solver.removeConstraint(exp.$stayConst);
 					solver.suggestValue(exp, contEl.getBoundingClientRect().width);
+					exp.$stayConst = solver.addStay(exp, c.Strength.required);
 				},
 				materialize: function(el, exp) {
 					el.css('width', Math.round(exp.value) + 'px');
@@ -125,7 +127,7 @@
 						value: heightValue
 					});
 					if (el == contEl) {
-						solver.addStay(heightExp);
+						heightExp.$stayConst = solver.addStay(heightExp, c.Strength.required);
 					} else {
 						solver.addConstraint(new c.Inequality(heightExp, c.GEQ, 0, c.Strength.required));
 						solver.addConstraint(new c.Inequality(heightExp, c.GEQ, heightValue, c.Strength.weak));
@@ -133,7 +135,9 @@
 					return heightExp;
 				},
 				update: function(contEl, exp, solver) {
+					solver.removeConstraint(exp.$stayConst);
 					solver.suggestValue(exp, contEl.getBoundingClientRect().height);
+					exp.$stayConst = solver.addStay(exp, c.Strength.required);
 				},
 				materialize: function(el, exp) {
 					el.css('height', Math.round(exp.value) + 'px');
