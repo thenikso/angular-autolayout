@@ -234,6 +234,8 @@ Some tasks that can be foreseen are:
 
 - There is a workaround (that should be handled more nicely) to fix an exception thrown by Cassowary.js when the `endEdit` method of the solver is called rapidly by the `al-update-on-resize` directive;
 - Fix bugs that arise with usage;
+- Better error reporting;
+- Support for resposive layouts;
 - Extend the functionalities provided by `angular-autolayout` to fit more specific needs;
 - Use the (not very documented) power of Cassowary.js to allow more freedom in constraints creation;
 - Performance profiling and fine tuning.
