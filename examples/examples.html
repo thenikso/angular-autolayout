@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Angular Autolayout - Examples</title>
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+	<style>
+		html, body {
+			margin: 0;
+			font-family: 'Lato', sans-serif;
+		}
+		/* You don't want to CSS this way but when you do, do it for HTML readability sake */
+		body > header,
+		body > section {
+			padding: 15px;
+		}
+		body > header > *,
+		body > section > * {
+			max-width: 980px;
+			margin: 0 auto;
+		}
+		body > section:nth-child(even) {
+			background: #f6f6f6;
+		}
+		body > section > footer > p:before {
+			content: 'note: ';
+			font-weight: bold;
+		}
+		h2 {
+			margin-top: 30px;
+		}
+		code {
+			font-family: monospace;
+			font-style: normal;
+			border: 1px solid #ddd;
+			background-color: #f8f8f8;
+			border-radius: 3px;
+			padding: 0;
+		}
+		.demo-container {
+			width: 100%;
+			height: 300px;
+			background: #fbfbfb;
+			border-radius: 5px;
+			margin-bottom: 30px;
+		}
+		.demo-box {
+			background: rgb(67, 135, 253);
+			background-image: -webkit-linear-gradient(top, rgb(67, 135, 253), rgb(70, 131, 234));
+			border-radius: 5px;
+			padding: 15px;
+			box-sizing: border-box;
+			color: rgba(255, 255, 255, 0.6);
+			font-weight: bold;
+			font-size: 3em;
+		}
+	</style>
+</head>
+<body ng-app="autolayout">
+
+	<header>
+		<h1>Angular-Autolayout Examples</h1>
+		<p>Here is a list of demos for angular-autolayout. <strong>Checkout the sources of this HTML</strong> file to see how the following layouts are achieved.</p>
+	</header>
+
+	<section>
+		<header>
+			<h2>Visual language example</h2>
+		</header>
+
+		<div id="demo1" class="demo-container" al-update-on-resize>
+			<div id="demo1-A" class="demo-box">A</div>
+			<div id="demo1-B" class="demo-box">B</div>
+			<div id="demo1-C" class="demo-box">C</div>
+
+			<al-constraint visual-format="|-[demo1-A(==demo1-B)]-[demo1-B]-|" align="top"></al-constraint>
+			<al-constraint>|-[demo1-C]-|</al-constraint>
+			<al-constraint>V:|-[demo1-A(==demo1-B,==demo1-C)]-[demo1-C]-|</al-constraint>
+		</div>
+
+		<footer>
+			<p>
+				Specifying the <code>visal-format</code> argument or text inside an
+				<code>al-constriant</code> element is equivalent.
+			</p>
+		</footer>
+	</section>
+
+	<section>
+		<header>
+			<h2>Align option examples</h2>
+		</header>
+
+		<div id="demo2" class="demo-container" al-update-on-resize>
+			<div id="demo2-A" class="demo-box">A</div>
+			<div id="demo2-B" class="demo-box">B</div>
+			<div id="demo2-C" class="demo-box">C</div>
+
+			<al-constraint>|-[demo2-A]-|</al-constraint>
+			<al-constraint
+				element="demo2-B"
+				attribute="width"
+				relation="greaterOrEqual"
+				to-element="demo2-A"
+				to-attribute="width"
+				multiplier="0.5"></al-constraint>
+			<al-constraint
+				element="demo2-C"
+				attribute="width"
+				relation="equal"
+				to-element="demo2-B"
+				to-attribute="width"
+				multiplier="0.5"></al-constraint>
+			<al-constraint align="centerX">V:|-[demo2-A(==demo2-B,==demo2-C)]-[demo2-B]-[demo2-C]-|</al-constraint>
+		</div>
+
+		<div id="demo3" class="demo-container" al-update-on-resize>
+			<div id="demo3-A" class="demo-box">A</div>
+			<div id="demo3-B" class="demo-box">B</div>
+			<div id="demo3-C" class="demo-box">C</div>
+
+			<al-constraint>|-[demo3-A]-|</al-constraint>
+			<al-constraint
+				element="demo3-B"
+				attribute="width"
+				relation="greaterOrEqual"
+				to-element="demo3-A"
+				to-attribute="width"
+				multiplier="0.5"></al-constraint>
+			<al-constraint
+				element="demo3-C"
+				attribute="width"
+				relation="equal"
+				to-element="demo3-B"
+				to-attribute="width"
+				multiplier="0.5"></al-constraint>
+			<al-constraint align="left">V:|-[demo3-A(==demo3-B,==demo3-C)]-[demo3-B]-[demo3-C]-|</al-constraint>
+		</div>
+
+		<div id="demo4" class="demo-container" al-update-on-resize>
+			<div id="demo4-A" class="demo-box">A</div>
+			<div id="demo4-B" class="demo-box">B</div>
+			<div id="demo4-C" class="demo-box">C</div>
+
+			<al-constraint>|-[demo4-A]-|</al-constraint>
+			<al-constraint
+				element="demo4-B"
+				attribute="width"
+				relation="greaterOrEqual"
+				to-element="demo4-A"
+				to-attribute="width"
+				multiplier="0.5"></al-constraint>
+			<al-constraint
+				element="demo4-C"
+				attribute="width"
+				relation="equal"
+				to-element="demo4-B"
+				to-attribute="width"
+				multiplier="0.5"></al-constraint>
+			<al-constraint align="right">V:|-[demo4-A(==demo4-B,==demo4-C)]-[demo4-B]-[demo4-C]-|</al-constraint>
+		</div>
+
+		<footer>
+			<p>
+				The <code>align</code> option applies between elements (except the container)
+				in the same visual format constriant string.
+			</p>
+			<p>
+				The <code>align</code> option should target the layout direction opposite
+				from that of the relative visual format constraint string.
+				If the constraint string begins with <code>H:</code> (horizontal, the default),
+				<code>align</code> might be <code>top</code>, <code>bottom</code> or <code>centerY</code>;
+				if <code>V:</code> (vertical) it might be <code>left</code>, <code>right</code> or <code>centerX</code>.
+			</p>
+		</footer>
+	</section>
+
+	<section>
+		<footer>
+			<div>
+				Do you thing there should be a specific example in here? Open an issue on GitHub!
+			</div>
+		</footer>
+	</section>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+	<script src="../dist/angular-autolayout.js"></script>
+
+</body>
+</html>
