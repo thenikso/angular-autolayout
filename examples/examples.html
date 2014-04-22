@@ -159,6 +159,37 @@
 
 	<section>
 		<header>
+			<h2>Priorities</h2>
+		</header>
+
+		<div id="demo4" class="demo-container" al-update-on-resize>
+			<div id="demo4-A" class="demo-box">Logo</div>
+			<div id="demo4-B" class="demo-box">Menu</div>
+			<div id="demo4-C" class="demo-box">Content</div>
+
+			<al-constraint align="top">|-[demo4-A(>=200@20)]-[demo4-B]-|</al-constraint>
+			<al-constraint
+				element="demo4-A"
+				attribute="width"
+				relation="equal"
+				to-element="demo4-B"
+				to-attribute="width"
+				multiplier="0.33"
+				priority="10"></al-constraint>
+			<al-constraint>|-[demo4-C]-|</al-constraint>
+			<al-constraint>V:|-[demo4-A(==demo4-B,==100)]-[demo4-C]-|</al-constraint>
+		</div>
+
+		<footer>
+			<p>
+				The logo will have a 33% width until it reaches 200px. Below
+				that it will stay at 200px width.
+			</p>
+		</footer>
+	</section>
+
+	<section>
+		<header>
 			<h2>Apple's Visual Format Language examples</h2>
 			<p>Replication of examples shown on the <a href="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html">Apple's documentation</a>.</p>
 		</header>
@@ -294,31 +325,6 @@
 
 			</li>
 		</ul>
-
-	</section>
-
-	<section>
-		<header>
-			<h2>Common page layouts</h2>
-		</header>
-
-		<div id="demo4" class="demo-container" al-update-on-resize>
-			<div id="demo4-A" class="demo-box">Logo</div>
-			<div id="demo4-B" class="demo-box">Menu</div>
-			<div id="demo4-C" class="demo-box">Content</div>
-
-			<al-constraint align="top">|-[demo4-A(>=200@20)]-[demo4-B]-|</al-constraint>
-			<al-constraint
-				element="demo4-A"
-				attribute="width"
-				relation="equal"
-				to-element="demo4-B"
-				to-attribute="width"
-				multiplier="0.33"
-				priority="10"></al-constraint>
-			<al-constraint>|-[demo4-C]-|</al-constraint>
-			<al-constraint>V:|-[demo4-A(==demo4-B,==100)]-[demo4-C]-|</al-constraint>
-		</div>
 
 	</section>
 
