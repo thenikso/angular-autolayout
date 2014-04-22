@@ -95,6 +95,31 @@ describe('Autolayout Directive', function() {
 		expect(redEl[0].offsetTop).to.equal((100 - 30) / 2);
 	});
 
+	it('should update the constraint when the attributes change', function() {
+		scope.testWidth = 40;
+		scope.testHeight = 20;
+		scope.testLeft = 5;
+		scope.testAlign = "top";
+		containerEl.append('<al-constraint align="{{testAlign}}">[redEl(=={{testWidth}})][blueEl]</al-constraint>');
+		containerEl.append('<al-constraint visual-format="V:[redEl(=={{testHeight}})]"></al-constraint>');
+		containerEl.append('<al-constraint element="redEl" attribute="left" relation="equal" to-attribute="left" constant="{{testLeft}}"></al-constraint>');
+		$compile(containerEl)(scope);
+		scope.$digest();
+		expect(redEl[0].offsetLeft).to.equal(scope.testLeft);
+		expect(redEl[0].offsetWidth).to.equal(scope.testWidth);
+		expect(redEl[0].offsetHeight).to.equal(scope.testHeight);
+		expect(blueEl[0].offsetTop).to.equal(redEl[0].offsetTop);
+		scope.testWidth = 32;
+		scope.testHeight = 30;
+		scope.testLeft = 7;
+		scope.testAlign = "bottom";
+		scope.$digest();
+		expect(redEl[0].offsetLeft).to.equal(scope.testLeft);
+		expect(redEl[0].offsetWidth).to.equal(scope.testWidth);
+		expect(redEl[0].offsetHeight).to.equal(scope.testHeight);
+		expect(blueEl[0].offsetTop).to.equal(redEl[0].offsetTop + redEl[0].offsetHeight - blueEl[0].offsetTop);
+	});
+
 	it('should support `al-update-on` directive on container element', function() {
 		var testEventName = 'testEvent';
 		containerEl.append('<al-constraint>|-10-[redEl]-10-|</al-constraint>');

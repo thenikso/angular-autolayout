@@ -131,56 +131,18 @@
 				to-element="demo2-B"
 				to-attribute="width"
 				multiplier="0.5"></al-constraint>
-			<al-constraint align="centerX">V:|-[demo2-A(==demo2-B,==demo2-C)]-[demo2-B]-[demo2-C]-|</al-constraint>
-		</div>
-
-		<div id="demo2-2" class="demo-container" al-update-on-resize>
-			<div id="demo2-2-A" class="demo-box">A</div>
-			<div id="demo2-2-B" class="demo-box">B</div>
-			<div id="demo2-2-C" class="demo-box">C</div>
-
-			<al-constraint>|-[demo2-2-A]-|</al-constraint>
-			<al-constraint
-				element="demo2-2-B"
-				attribute="width"
-				relation="greaterOrEqual"
-				to-element="demo2-2-A"
-				to-attribute="width"
-				multiplier="0.5"></al-constraint>
-			<al-constraint
-				element="demo2-2-C"
-				attribute="width"
-				relation="equal"
-				to-element="demo2-2-B"
-				to-attribute="width"
-				multiplier="0.5"></al-constraint>
-			<al-constraint align="left">V:|-[demo2-2-A(==demo2-2-B,==demo2-2-C)]-[demo2-2-B]-[demo2-2-C]-|</al-constraint>
-		</div>
-
-		<div id="demo2-3" class="demo-container" al-update-on-resize>
-			<div id="demo2-3-A" class="demo-box">A</div>
-			<div id="demo2-3-B" class="demo-box">B</div>
-			<div id="demo2-3-C" class="demo-box">C</div>
-
-			<al-constraint>|-[demo2-3-A]-|</al-constraint>
-			<al-constraint
-				element="demo2-3-B"
-				attribute="width"
-				relation="greaterOrEqual"
-				to-element="demo2-3-A"
-				to-attribute="width"
-				multiplier="0.5"></al-constraint>
-			<al-constraint
-				element="demo2-3-C"
-				attribute="width"
-				relation="equal"
-				to-element="demo2-3-B"
-				to-attribute="width"
-				multiplier="0.5"></al-constraint>
-			<al-constraint align="right">V:|-[demo2-3-A(==demo2-3-B,==demo2-3-C)]-[demo2-3-B]-[demo2-3-C]-|</al-constraint>
+			<al-constraint align="{{demo2.align}}">V:|-[demo2-A(==demo2-B,==demo2-C)]-[demo2-B]-[demo2-C]-|</al-constraint>
 		</div>
 
 		<footer>
+			<p>
+				Try align
+				<select ng-model="demo2.align" ng-init="demo2.align = 'centerX'">
+					<option value="left">left</option>
+					<option value="centerX">centerX</option>
+					<option value="right">right</option>
+				</select>
+			</p>
 			<p>
 				The <code>align</code> option applies between elements (except the container)
 				in the same visual format constriant string.
@@ -327,11 +289,36 @@
 					<button id="demo3-9-find">Find</button>
 					<button id="demo3-9-findNext">Find Next</button>
 					<input type="text" id="demo3-9-findField">
-					<al-constraint>|-[demo3-9-find(<=50)]-[demo3-9-findNext(<=80)]-[demo3-9-findField(>=20)]-|</al-constraint>
+					<al-constraint>|-[demo3-9-find(>=50)]-[demo3-9-findNext(>=80)]-[demo3-9-findField(>=20)]-|</al-constraint>
 				</div>
 
 			</li>
 		</ul>
+
+	</section>
+
+	<section>
+		<header>
+			<h2>Common page layouts</h2>
+		</header>
+
+		<div id="demo4" class="demo-container" al-update-on-resize>
+			<div id="demo4-A" class="demo-box">Logo</div>
+			<div id="demo4-B" class="demo-box">Menu</div>
+			<div id="demo4-C" class="demo-box">Content</div>
+
+			<al-constraint align="top">|-[demo4-A(>=200@10)]-[demo4-B]-|</al-constraint>
+			<al-constraint
+				element="demo4-B"
+				attribute="width"
+				relation="greaterOrEqual"
+				to-element="demo4-A"
+				to-attribute="width"
+				multiplier="3"
+				priority="30"></al-constraint>
+			<al-constraint>|-[demo4-C]-|</al-constraint>
+			<al-constraint>V:|-[demo4-A(==demo4-B,==100)]-[demo4-C]-|</al-constraint>
+		</div>
 
 	</section>
 
