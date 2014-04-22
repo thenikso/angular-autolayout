@@ -76,7 +76,7 @@
 					return topExp;
 				},
 				materialize: function(el, exp) {
-					el.css('top', exp.value + 'px');
+					el.css('top', Math.round(exp.value) + 'px');
 				}
 			},
 			left: {
@@ -92,7 +92,7 @@
 					return leftExp;
 				},
 				materialize: function(el, exp) {
-					el.css('left', exp.value + 'px');
+					el.css('left', Math.round(exp.value) + 'px');
 				}
 			},
 			width: {
@@ -114,7 +114,7 @@
 					solver.suggestValue(exp, contEl.getBoundingClientRect().width);
 				},
 				materialize: function(el, exp) {
-					el.css('width', exp.value + 'px');
+					el.css('width', Math.round(exp.value) + 'px');
 				}
 			},
 			height: {
@@ -136,7 +136,7 @@
 					solver.suggestValue(exp, contEl.getBoundingClientRect().height);
 				},
 				materialize: function(el, exp) {
-					el.css('height', exp.value + 'px');
+					el.css('height', Math.round(exp.value) + 'px');
 				}
 			},
 			right: {
