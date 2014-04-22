@@ -37,12 +37,32 @@
 			border-radius: 3px;
 			padding: 0;
 		}
+		.inline-list {
+			list-style: none;
+			padding: 0;
+		}
+		.inline-list > li {
+			float: left;
+			margin-right: 15px;
+			margin-bottom: 15px;
+		}
+		.inline-list:after {
+			content: " ";
+			display: table;
+			clear: both;
+		}
 		.demo-container {
 			width: 100%;
 			height: 300px;
 			background: #fbfbfb;
 			border-radius: 5px;
 			margin-bottom: 30px;
+		}
+		.demo-container.inline {
+			display: inline-block;
+			height: 30px;
+			width: 200px;
+			margin-bottom: 0;
 		}
 		.demo-box {
 			background: rgb(67, 135, 253);
@@ -114,50 +134,50 @@
 			<al-constraint align="centerX">V:|-[demo2-A(==demo2-B,==demo2-C)]-[demo2-B]-[demo2-C]-|</al-constraint>
 		</div>
 
-		<div id="demo3" class="demo-container" al-update-on-resize>
-			<div id="demo3-A" class="demo-box">A</div>
-			<div id="demo3-B" class="demo-box">B</div>
-			<div id="demo3-C" class="demo-box">C</div>
+		<div id="demo2-2" class="demo-container" al-update-on-resize>
+			<div id="demo2-2-A" class="demo-box">A</div>
+			<div id="demo2-2-B" class="demo-box">B</div>
+			<div id="demo2-2-C" class="demo-box">C</div>
 
-			<al-constraint>|-[demo3-A]-|</al-constraint>
+			<al-constraint>|-[demo2-2-A]-|</al-constraint>
 			<al-constraint
-				element="demo3-B"
+				element="demo2-2-B"
 				attribute="width"
 				relation="greaterOrEqual"
-				to-element="demo3-A"
+				to-element="demo2-2-A"
 				to-attribute="width"
 				multiplier="0.5"></al-constraint>
 			<al-constraint
-				element="demo3-C"
+				element="demo2-2-C"
 				attribute="width"
 				relation="equal"
-				to-element="demo3-B"
+				to-element="demo2-2-B"
 				to-attribute="width"
 				multiplier="0.5"></al-constraint>
-			<al-constraint align="left">V:|-[demo3-A(==demo3-B,==demo3-C)]-[demo3-B]-[demo3-C]-|</al-constraint>
+			<al-constraint align="left">V:|-[demo2-2-A(==demo2-2-B,==demo2-2-C)]-[demo2-2-B]-[demo2-2-C]-|</al-constraint>
 		</div>
 
-		<div id="demo4" class="demo-container" al-update-on-resize>
-			<div id="demo4-A" class="demo-box">A</div>
-			<div id="demo4-B" class="demo-box">B</div>
-			<div id="demo4-C" class="demo-box">C</div>
+		<div id="demo2-3" class="demo-container" al-update-on-resize>
+			<div id="demo2-3-A" class="demo-box">A</div>
+			<div id="demo2-3-B" class="demo-box">B</div>
+			<div id="demo2-3-C" class="demo-box">C</div>
 
-			<al-constraint>|-[demo4-A]-|</al-constraint>
+			<al-constraint>|-[demo2-3-A]-|</al-constraint>
 			<al-constraint
-				element="demo4-B"
+				element="demo2-3-B"
 				attribute="width"
 				relation="greaterOrEqual"
-				to-element="demo4-A"
+				to-element="demo2-3-A"
 				to-attribute="width"
 				multiplier="0.5"></al-constraint>
 			<al-constraint
-				element="demo4-C"
+				element="demo2-3-C"
 				attribute="width"
 				relation="equal"
-				to-element="demo4-B"
+				to-element="demo2-3-B"
 				to-attribute="width"
 				multiplier="0.5"></al-constraint>
-			<al-constraint align="right">V:|-[demo4-A(==demo4-B,==demo4-C)]-[demo4-B]-[demo4-C]-|</al-constraint>
+			<al-constraint align="right">V:|-[demo2-3-A(==demo2-3-B,==demo2-3-C)]-[demo2-3-B]-[demo2-3-C]-|</al-constraint>
 		</div>
 
 		<footer>
@@ -173,6 +193,146 @@
 				if <code>V:</code> (vertical) it might be <code>left</code>, <code>right</code> or <code>centerX</code>.
 			</p>
 		</footer>
+	</section>
+
+	<section>
+		<header>
+			<h2>Apple's Visual Format Language examples</h2>
+			<p>Replication of examples shown on the <a href="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/VisualFormatLanguage/VisualFormatLanguage.html">Apple's documentation</a>.</p>
+		</header>
+
+		<ul class="inline-list">
+			<li>Standard space</li>
+			<li><code>[button]-[textField]</code></li>
+			<li><img src="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/Art/standardSpace.png" alt=""></li>
+			<li>
+
+				<div id="demo3" class="demo-container inline">
+					<button id="demo3-button">Button</button>
+					<input type="text" id="demo3-textField">
+					<al-constraint>[demo3-button]-[demo3-textField]</al-constraint>
+				</div>
+
+			</li>
+		</ul>
+
+		<ul class="inline-list">
+			<li>Width Constraint</li>
+			<li><code>[button(>=50)]</code></li>
+			<li><img src="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/Art/widthConstraint.png" alt=""></li>
+			<li>
+
+				<div id="demo3-2" class="demo-container inline">
+					<button id="demo3-2-button" style="width:10px">Button</button>
+					<al-constraint>[demo3-2-button(>=50)]</al-constraint>
+				</div>
+
+			</li>
+		</ul>
+
+		<ul class="inline-list">
+			<li>Connection to Superview</li>
+			<li><code>|-50-[purpleBox]-50-|</code></li>
+			<li><img src="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/Art/connectionToSuperview.png" alt=""></li>
+			<li>
+
+				<div id="demo3-3" class="demo-container inline">
+					<div id="demo3-3-purpleBox" class="demo-box"></div>
+					<al-constraint>|-50-[demo3-3-purpleBox]-50-|</al-constraint>
+				</div>
+
+			</li>
+		</ul>
+
+		<ul class="inline-list">
+			<li>Vertical Layout</li>
+			<li><code>V:[topField]-10-[bottomField]</code></li>
+			<li><img src="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/Art/verticalLayout.png" alt=""></li>
+			<li>
+
+				<div id="demo3-4" class="demo-container inline" style="height:54px">
+					<input type="text" id="demo3-4-topField">
+					<input type="text" id="demo3-4-bottomField">
+					<al-constraint>V:[demo3-4-topField]-10-[demo3-4-bottomField]</al-constraint>
+				</div>
+
+			</li>
+		</ul>
+
+		<ul class="inline-list">
+			<li>Flush Views</li>
+			<li><code>[maroonView][blueView]</code></li>
+			<li><img src="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/Art/flushViews.png" alt=""></li>
+			<li>
+
+				<div id="demo3-5" class="demo-container inline">
+					<div id="demo3-5-maroonView" style="background:#7E1446;height:20px;width:50px"></div>
+					<div id="demo3-5-blueView" style="background:#004A83;height:20px;width:50px"></div>
+					<al-constraint>[demo3-5-maroonView][demo3-5-blueView]</al-constraint>
+				</div>
+
+			</li>
+		</ul>
+
+		<ul class="inline-list">
+			<li>Priority</li>
+			<li><code>[button(100@20)]</code></li>
+			<li><img src="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/Art/priority.png" alt=""></li>
+			<li>
+
+				<div id="demo3-6" class="demo-container inline">
+					<button id="demo3-6-button">Button</button>
+					<al-constraint>[demo3-6-button(100@20)]</al-constraint>
+				</div>
+
+			</li>
+		</ul>
+
+		<ul class="inline-list">
+			<li>Equal Widths</li>
+			<li><code>[button1(==button2)]</code></li>
+			<li><img src="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/Art/equalWidths.png" alt=""></li>
+			<li>
+
+				<div id="demo3-7" class="demo-container inline">
+					<button id="demo3-7-button1" style="width:70px">Button 1</button>
+					<button id="demo3-7-button2">Button 2</button>
+					<al-constraint>[demo3-7-button1(==demo3-7-button2)]-[demo3-7-button2]</al-constraint>
+				</div>
+
+			</li>
+		</ul>
+
+		<ul class="inline-list">
+			<li>Multiple Predicates</li>
+			<li><code>[flexibleButton(&gt;=70,&lt;=100)]</code></li>
+			<li><img src="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/Art/multiplePredicates.png" alt=""></li>
+			<li>
+
+				<div id="demo3-8" class="demo-container inline">
+					<button id="demo3-8-flexibleButton">Button</button>
+					<al-constraint>[demo3-8-flexibleButton(>=70,<=100)]</al-constraint>
+				</div>
+
+			</li>
+		</ul>
+
+		<ul class="inline-list">
+			<li>A Complete Line of Layout</li>
+			<li><code>|-[find]-[findNext]-[findField(>=20)]-|</code></li>
+			<li><img src="https://developer.apple.com/library/ios/documentation/userexperience/conceptual/AutolayoutPG/Art/completeLayout.png" alt=""></li>
+			<li>
+
+				<div id="demo3-9" class="demo-container inline" style="width:375px">
+					<button id="demo3-9-find">Find</button>
+					<button id="demo3-9-findNext">Find Next</button>
+					<input type="text" id="demo3-9-findField">
+					<al-constraint>|-[demo3-9-find(<=50)]-[demo3-9-findNext(<=80)]-[demo3-9-findField(>=20)]-|</al-constraint>
+				</div>
+
+			</li>
+		</ul>
+
 	</section>
 
 	<section>
