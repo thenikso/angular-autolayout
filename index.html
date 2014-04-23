@@ -10,18 +10,18 @@
 </head>
 <body ng-app="autolayout">
 
-	<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+	<a href="https://github.com/thenikso/angular-autolayout"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
 
 	<header id="site-header">
 		<i class="list layout icon site-logo"></i>
 		<h1 class="title">Angular-Autolayout<span class="dem">.js</span></h1>
 		<p class="subheading">Constraint based layout for your AngualrJS apps</p>
-		<a href="" class="ui inverted basic button">
+		<a href="https://github.com/thenikso/angular-autolayout/archive/master.zip" class="ui inverted basic button">
 			<i class="download disk icon"></i>
-			Download zip
+			Download Zip
 		</a>
 		&nbsp;
-		<a href="" class="ui inverted basic button">
+		<a href="https://github.com/thenikso/angular-autolayout" class="ui inverted basic button">
 			<i class="github icon"></i>
 			View on GitHub
 		</a>
@@ -32,7 +32,7 @@
 			<div class="feature column">
 				<i class="checked checkbox icon"></i>
 				<h2 class="title">Constraint Based</h2>
-				<p class="subheading">A programming paradigm that feels just right for precise elements layout</p>
+				<p class="subheading">A <a href="http://en.wikipedia.org/wiki/Constraint_programming">programming paradigm</a> that feels just right for precise elements layout</p>
 			</div>
 			<div class="feature column">
 				<i class="settings icon"></i>
@@ -54,7 +54,10 @@
 		<p>
 			Angular-autolayout provides an <code>al-constraint</code> directive
 			that can be used to layout DOM elments based on constraints. You can
-			finally make those divs to have the same height!
+			finally make those divs to have the same height! Think of the potential
+			for <a href="https://developer.chrome.com/apps/about_apps">Chrome Apps</a>
+			or <a href="https://github.com/rogerwang/node-webkit">node-webkit</a>,
+			think of <a href="https://cordova.apache.org/">Cordova</a> apps!
 		</p>
 		<div class="example ui two column stackable grid">
 			<div class="twelve wide column">
@@ -115,7 +118,7 @@
 			</p>
 			<p>
 				Check out the examples included in the project sources
-				as well as the documentation on the <a href="">readme</a> file.
+				as well as the documentation on the <a href="https://github.com/thenikso/angular-autolayout">readme</a> file.
 				Also, try the <a href="#playground">playground</a> to get started
 				laying out stuff!
 			</p>
@@ -126,6 +129,15 @@
 		<header>
 			<h2>Playground</h2>
 		</header>
+
+		<p>
+			Can you figure out the autolayout visual format language? <code>|</code>
+			means the container view, <code>-</code> is a standard space and elements
+			are referenced by id like so <code>[elementId]</code>.
+			<code>V:</code> stands for "vertical" and the <code>align</code> attribute
+			is a shortcut that makes elements named in that constraint align in respect
+			of each other. Give it a try.
+		</p>
 
 		<div class="example ui two column stackable grid"
 			ng-init="playground.containerId = 'play1'; playground.constraints = [{align:'top', value:'|-[play1-A(==play1-B,==play1-C)]-[play1-B]-[play1-C]-|'}, {align:'right', value:'V:|-[play1-A(==play1-B,==play1-C)]-|'}]">
@@ -152,9 +164,10 @@
 			</div>
 		</div>
 
-		<p>Try to reproduce the following layouts:</p>
-
 		<div class="ui four column stackable grid">
+			<div class="column">
+				<p>Try to reproduce the following layouts:</p>
+			</div>
 			<div class="column">
 				<div id="try1" class="demo-container secondary">
 					<div id="try1-A" class="demo-box">A</div>
@@ -167,29 +180,75 @@
 					<button class="ui small button solution-button" ng-click="suggestSolution([{align:'centerX', value:'V:|-[play1-A(==play1-B,==play1-C)]-30-[play1-B]-[play1-C]-|'}, {value:'|-[play1-A(==play1-B,==play1-C)]-|'}])">Solution</button>
 				</div>
 			</div>
-			<div class="column">b</div>
-			<div class="column">c</div>
-			<div class="column">d</div>
+			<div class="column">
+				<div id="try2" class="demo-container secondary">
+					<div id="try2-A" class="demo-box">A</div>
+					<div id="try2-B" class="demo-box">B</div>
+					<div id="try2-C" class="demo-box">C</div>
+
+					<al-constraint>|[try2-A(==50)]-[try2-B]-|</al-constraint>
+					<al-constraint>V:|-[try2-B(==try2-A,==try2-C)]-[try2-C]-|</al-constraint>
+					<al-constraint>|-[try2-C]-|</al-constraint>
+
+					<button class="ui small button solution-button" ng-click="suggestSolution([{value:'|[play1-A(==50)]-[play1-B]-|'}, {value:'V:|-[play1-B(==play1-A,==play1-C)]-[play1-C]-|'}, {value:'|-[play1-C]-|'}])">Solution</button>
+				</div>
+			</div>
+			<div class="column">
+				<div id="try3" class="demo-container secondary">
+					<div id="try3-A" class="demo-box">A</div>
+					<div id="try3-B" class="demo-box">B</div>
+					<div id="try3-C" class="demo-box">C</div>
+
+					<al-constraint align="centerX">V:|-[try3-A(==try3-B,==try3-C)]-[try3-B]-[try3-C]-|</al-constraint>
+					<al-constraint>|-[try3-A]-|</al-constraint>
+					<al-constraint
+						element="try3-A"
+						attribute="width"
+						relation="equal"
+						to-element="try3-B"
+						to-attribute="width"
+						multiplier="1.4"></al-constraint>
+					<al-constraint
+						element="try3-B"
+						attribute="width"
+						relation="equal"
+						to-element="try3-C"
+						to-attribute="width"
+						multiplier="1.4"></al-constraint>
+
+					<div class="ui pointing right black label" ng-show="showHint" style="position:absolute;text-transform:none;bottom:-3em;right:9.2em;width:100%">
+						<p>
+							Ha! For this you'll need a different form of the directive.
+							Check out the <a href="https://github.com/thenikso/angular-autolayout">documentation</a>!
+						</p>
+					</div>
+					<button class="ui small button solution-button" ng-click="showHint=!showHint">Solution*</button>
+				</div>
+			</div>
 		</div>
 
 		<p>
-			...and you're good to go! Make sure to checkout the <a href="">documentation</a> to
+			...and you're good to go! Make sure to checkout the <a href="https://github.com/thenikso/angular-autolayout">documentation</a> to
 			create even cooler layouts and make them update on window resize. Enjoy!
 		</p>
+		<p><small>* this one may not be possible in this playground.</small></p>
 	</section>
 
 	<footer id="site-footer">
-		<a href="" class="ui inverted basic button">
+		<a href="https://github.com/thenikso/angular-autolayout/archive/master.zip" class="ui inverted basic button">
 			<i class="download disk icon"></i>
-			Download zip
+			Download Zip
 		</a>
 		&nbsp;
-		<a href="" class="ui inverted basic button">
+		<a href="https://github.com/thenikso/angular-autolayout" class="ui inverted basic button">
 			<i class="github icon"></i>
 			View on GitHub
 		</a>
 		<p>
 			Created by Nicola Peduzzi.
+			<a href="https://github.com/thenikso"><i class="github alternate icon"></i></a>
+			<a href="https://twitter.com/Nikso"><i class="twitter icon"></i></a>
+			<a href="https://plus.google.com/+NicolaPeduzzi"><i class="google plus icon"></i></a>
 		</p>
 	</footer>
 
@@ -238,6 +297,7 @@
 		$scope.suggestSolution = function (sol) {
 			$scope.playground.constraints = sol;
 			$scope.applyConstraints();
+			document.getElementById('playground').scrollIntoView(true);
 		};
 		var initialConstraintsStop = $scope.$watchCollection('playground.constraints', function (cs) {
 			if (!constraints) {
