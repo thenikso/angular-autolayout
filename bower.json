@@ -1,32 +1,34 @@
 {
-  "name": "angular-autolayout",
-  "main": "dist/angular-autolayout.js",
-  "version": "0.1.0",
-  "authors": [
-    "Nicola Peduzzi <thenikso@gmail.com>"
-  ],
-  "description": "Constraint solver based layout system inspired by Apple's iOS Autolayout for AngularJS",
-  "keywords": [
-    "layout",
-    "autolayout",
-    "constraint",
-    "constraint programming",
-    "angular",
-    "angularjs"
-  ],
-  "license": "Apache2.0",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "angular": "~1.2.16"
-  },
-  "devDependencies": {
-    "angular-mocks": "~1.2.16",
-    "chai": "~1.9.1"
-  }
+	"name": "angular-autolayout",
+	"main": "dist/angular-autolayout.js",
+	"version": "0.6.0",
+	"authors": [
+		"Nicola Peduzzi <thenikso@gmail.com>"
+	],
+	"description": "Constraint solver based layout system for AngularJS inspired by Apple's Auto Layout",
+	"keywords": [
+		"layout",
+		"auto layout",
+		"autolayout",
+		"constraint",
+		"constraint programming",
+		"angular",
+		"angularjs"
+	],
+	"license": "MIT",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests",
+		"src"
+	],
+	"dependencies": {
+		"angular": "~1.2.16"
+	},
+	"devDependencies": {
+		"angular-mocks": "~1.2.16",
+		"chai": "~1.9.1"
+	}
 }

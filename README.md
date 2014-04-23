@@ -238,7 +238,8 @@ Some tasks that can be foreseen are:
 - Support for resposive layouts;
 - Extend the functionalities provided by `angular-autolayout` to fit more specific needs;
 - Use the (not very documented) power of Cassowary.js to allow more freedom in constraints creation;
-- Performance profiling and fine tuning.
+- Performance profiling and fine tuning;
+- A twin module that provides an Interface Builder like experience in creating constraints.
 
 ## License
 
