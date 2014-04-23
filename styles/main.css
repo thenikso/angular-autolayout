@@ -20,10 +20,11 @@ code {
 	border: 1px solid #ddd;
 	background-color: #f8f8f8;
 	border-radius: 3px;
+	padding: 0 0.2em;
 }
 
 pre {
-	margin-top: 0;
+	margin: 0;
 }
 
 pre > code {
@@ -32,6 +33,29 @@ pre > code {
 
 .dem {
 	opacity: 0.5;
+}
+
+.highlight-code {
+	white-space: pre;
+	font-family: monospace;
+}
+
+.highlight-code input {
+	font-family: monospace;
+	border: none;
+	background: #f9f9f9;
+	padding: 0.1em 0.3em;
+	font-size: 1em;
+}
+
+.highlight-code input.error {
+	background: #E7BEBE;
+}
+
+.highlight-code .ui.pointing.label {
+	position: absolute;
+	top: 3em;
+	z-index: 1;
 }
 
 #site-header {
@@ -79,6 +103,10 @@ pre > code {
 
 .feature .subheading {
 	font-weight: 300;
+}
+
+.example pre {
+	margin: 0;
 }
 
 .example pre > code {
