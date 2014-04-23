@@ -1,0 +1,68 @@
+body, html {
+	margin: 0;
+	font-size: 100%;
+	font-family: 'Oxygen', sans-serif;
+	color: #333;
+	background: white;
+}
+
+a {
+	color: #428bca;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #2a6496;
+	text-decoration: underline;
+}
+
+.dem {
+	opacity: 0.5;
+}
+
+#site-header {
+	text-align:center;
+	background: #396AD1;
+	background-image: url(../images/bg.jpg);
+	color: white;
+	padding: 3em 1em;
+	margin-bottom: 2rem;
+}
+
+#site-header .site-logo {
+	font-size: 5em;
+	margin: 0 0 3rem;
+	line-height: 1;
+}
+
+#site-header .title {
+	font-size: 3.5em;
+	margin: 0;
+}
+
+#site-header .subheading {
+	font-weight: 300;
+	font-size: 1.5em;
+	margin-bottom: 3rem;
+}
+
+.container {
+	margin-right: auto;
+	margin-left: auto;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	max-width: 1200px;
+	margin-bottom: 2rem;
+}
+
+.feature {
+	text-align: center !important;
+}
+
+.feature .icon {
+	font-size: 2.5em;
+}
+
+.feature .subheading {
+	font-weight: 300;
+}
