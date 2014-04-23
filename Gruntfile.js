@@ -17,8 +17,7 @@ module.exports = function(grunt) {
 					dot: true,
 					src: [
 						'.tmp',
-						'dist/*',
-						'!dist/.git*'
+						'angular-autolayout*.js'
 					]
 				}]
 			}
@@ -54,15 +53,15 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				src: ['node_modules/cassowary/bin/c.js', '.tmp/visual-format-parser.js', '.tmp/angular-autolayout.js'],
-				dest: 'dist/angular-autolayout.js',
+				dest: 'angular-autolayout.js',
 			},
 		},
 
 		uglify: {
 			dist: {
 				files: {
-					'dist/angular-autolayout.min.js': [
-						'dist/angular-autolayout.js'
+					'angular-autolayout.min.js': [
+						'angular-autolayout.js'
 					]
 				}
 			}
