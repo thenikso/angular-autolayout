@@ -58,12 +58,16 @@ pre > code {
 	z-index: 1;
 }
 
-#site-header {
+#site-header,
+#site-footer {
 	text-align:center;
 	background: #396AD1;
 	background-image: url(../images/bg.jpg);
 	color: white;
 	padding: 3em 1em;
+}
+
+#site-header {
 	margin-bottom: 2rem;
 }
 
@@ -121,6 +125,7 @@ pre > code {
 	border-radius: 3px;
 	background: #f5f5f5;
 	height: 200px;
+	position: relative;
 }
 
 .demo-box {
@@ -131,4 +136,14 @@ pre > code {
 	padding: 0.2em 0.4em;
 	font-weight: bold;
 	box-sizing: border-box;
+}
+
+.demo-container.secondary .demo-box {
+	background: #ccc;
+}
+
+.demo-container .solution-button {
+	position: absolute;
+	right: 0.5em;
+	bottom: -1em;
 }

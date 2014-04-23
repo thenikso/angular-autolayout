@@ -111,7 +111,7 @@
 			<h3><i class="bolt icon"></i>Use it!</h3>
 			<p>
 				You can now inject the <code>autolayout</code> service in your constrollers
-				and use the <code>&lt;al-constriant&gt;</code> directive as seen above.
+				and use the <code>&lt;al-constraint&gt;</code> directive as seen above.
 			</p>
 			<p>
 				Check out the examples included in the project sources
@@ -151,7 +151,47 @@
 				</div>
 			</div>
 		</div>
+
+		<p>Try to reproduce the following layouts:</p>
+
+		<div class="ui four column stackable grid">
+			<div class="column">
+				<div id="try1" class="demo-container secondary">
+					<div id="try1-A" class="demo-box">A</div>
+					<div id="try1-B" class="demo-box">B</div>
+					<div id="try1-C" class="demo-box">C</div>
+
+					<al-constraint align="centerX">V:|-[try1-A(==try1-B,==try1-C)]-30-[try1-B]-[try1-C]-|</al-constraint>
+					<al-constraint>|-[try1-A(==try1-B,==try1-C)]-|</al-constraint>
+
+					<button class="ui small button solution-button" ng-click="suggestSolution([{align:'centerX', value:'V:|-[play1-A(==play1-B,==play1-C)]-30-[play1-B]-[play1-C]-|'}, {value:'|-[play1-A(==play1-B,==play1-C)]-|'}])">Solution</button>
+				</div>
+			</div>
+			<div class="column">b</div>
+			<div class="column">c</div>
+			<div class="column">d</div>
+		</div>
+
+		<p>
+			...and you're good to go! Make sure to checkout the <a href="">documentation</a> to
+			create even cooler layouts and make them update on window resize. Enjoy!
+		</p>
 	</section>
+
+	<footer id="site-footer">
+		<a href="" class="ui inverted basic button">
+			<i class="download disk icon"></i>
+			Download zip
+		</a>
+		&nbsp;
+		<a href="" class="ui inverted basic button">
+			<i class="github icon"></i>
+			View on GitHub
+		</a>
+		<p>
+			Created by Nicola Peduzzi.
+		</p>
+	</footer>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
@@ -194,6 +234,10 @@
 				}
 			}
 			$scope.playground.constraints = constraints;
+		};
+		$scope.suggestSolution = function (sol) {
+			$scope.playground.constraints = sol;
+			$scope.applyConstraints();
 		};
 		var initialConstraintsStop = $scope.$watchCollection('playground.constraints', function (cs) {
 			if (!constraints) {
