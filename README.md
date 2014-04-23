@@ -1,14 +1,18 @@
 # Autolayout for AngularJS
 
-[Constraint programming][1] layout paradigm for AngularJS web applications inspired by [Apple's Auto Layout][4] for iOS and OS X.
+[Constraint programmingg][1] layout paradigm for AngularJS web applications inspired by [Apple's Auto Layout][4] for iOS and OS X.
 
 Use constraint based layout to position HTML elements on a page using AngularJS.
 
 This project uses [Cassowary.js constraint solver][2] which is an optimized javascript version of the
-[Cassowary hierarchial constraint toolkit][3]
+[Cassowary hierarchical constraint toolkit][3]
 used by Apple at the core of Auto Layout.
 
 ## Usage
+
+Install by cloning the repository or via Bower:
+
+`bower install angular-autolayout`
 
 Add `angular-autolayout` to your imported scripts:
 
@@ -56,7 +60,7 @@ angular.module("myApp").controller("myController", function(autolayout) {
 ## Documentation
 
 Angular-Autolayout is made to replicate Apple's Auto Layout for the web. The [Auto Layout Guide][4] provides some useful documentation that is relevant for this project.
-Refer especially to the [Visual Format Language][5] documentation as it has been closely adopted.
+Refer especially to the [Visual Format Languagee][5] documentation as it has been closely adopted.
 
 ### Directives
 
@@ -141,7 +145,7 @@ The only injectable service exposed is called `autolayout`. With it you can acce
 	- A `string` in [Visual Format Language][5] that will result in the generation of one or more constraints;
 	- An `object` with the following keys:
 		- `element` is the first **DOM element** affected by the constraint. It can be `null` to refer to the container element used in the constructor. This element should either be the container element or a direct child of it;
-		- `attribute` could be a string referring to an **attribute converter** like "left". It can also be a function, in which case it will be treated as a `create` converter's function receiving element, containerElement and solver. If a function is provided, it should implement the cacheing behaviour of `provider.expressionForElementAttribute` by itself;
+		- `attribute` could be a string referring to an **attribute converter** like "left". It can also be a function, in which case it will be treated as a `create` converter's function receiving element, containerElement and solver. If a function is provided, it should implement the caching behavior of `provider.expressionForElementAttribute` by itself;
 		- `toElement` is the second DOM element affected by the constraint. It can also be `null` but only if `element` is specified;
 		- `toAttribute`, like `attribute` is the attribute converter for the `toElement`;
 		- `multiplier` defaults to **1.0** and it's applied to the generated constraint expression as shown above;
@@ -228,14 +232,14 @@ Building the project will generate a packaged `angular-autolayout.js` and it's m
 
 This project uses [Cassoway.js][2] and [PEG][6], any contribution to those projects will help this project too.
 
-The first thing you could do to partecipate to `angular-autolayout` is to use it in your project. Doing that you'll be more likely to find fixes or improvements that are needed.
+The first thing you could do to partecipate to `angular-autolayout` is to use it in your project. By doing that you'll be more likely to find fixes or improvements that may be needed.
 
 Some tasks that can be foreseen are:
 
 - There is a workaround (that should be handled more nicely) to fix an exception thrown by Cassowary.js when the `endEdit` method of the solver is called rapidly by the `al-update-on-resize` directive;
 - Fix bugs that arise with usage;
 - Better error reporting;
-- Support for resposive layouts;
+- Support for responsive layouts?;
 - Extend the functionalities provided by `angular-autolayout` to fit more specific needs;
 - Use the (not very documented) power of Cassowary.js to allow more freedom in constraints creation;
 - Performance profiling and fine tuning;
