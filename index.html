@@ -114,23 +114,23 @@
 				and use the <code>&lt;al-constriant&gt;</code> directive as seen above.
 			</p>
 			<p>
-				Check out the examples included in the project sources and the
-				<a href="#playground">playground</a> to get started
+				Check out the examples included in the project sources
+				as well as the documentation on the <a href="">readme</a> file.
+				Also, try the <a href="#playground">playground</a> to get started
 				laying out stuff!
 			</p>
 		</div>
 	</section>
 
-	<section id="playground" class="container">
+	<section id="playground" class="container" ng-controller="playgroundCtrl">
 		<header>
 			<h2>Playground</h2>
 		</header>
 
 		<div class="example ui two column stackable grid"
-			ng-controller="playgroundCtrl"
-			ng-init="playground.containerId = 'play1'; playground.constraints = [{align:'top', value:'|-[play1-A(==play1-B,==play1-C)]-[play1-B]-|'}, {align:'', value:'V:|-[play1-A]-|'}, {align:'right', value:'V:|-[play1-B(==play1-C)]-[play1-C]-|'}]">
+			ng-init="playground.containerId = 'play1'; playground.constraints = [{align:'top', value:'|-[play1-A(==play1-B,==play1-C)]-[play1-B]-[play1-C]-|'}, {align:'right', value:'V:|-[play1-A(==play1-B,==play1-C)]-|'}]">
 			<div class="twelve wide column">
-<div class="highlight-code">&lt;div id="play1" class="demo-container" al-update-on-resize&gt;
+				<form ng-submit="playground.hasChanges=false;applyConstraints()" class="highlight-code">&lt;div id="play1" class="demo-container" al-update-on-resize&gt;
   &lt;div id="play1-A" class="demo-box"&gt;A&lt;/div&gt;
   &lt;div id="play1-B" class="demo-box"&gt;B&lt;/div&gt;
   &lt;div id="play1-C" class="demo-box"&gt;C&lt;/div&gt;
@@ -141,7 +141,7 @@
 	</span>&lt;al-constraint align="<input type="text" ng-model="playground.newConstraint.align" style="width:5em" ng-change="playground.hasChanges=true">"&gt;
 		<input type="text" ng-model="playground.newConstraint.value" style="width:85%" ng-class="{'error':c.error}" ng-change="playground.hasChanges=true">
 	&lt;/al-constraint&gt;
-&lt;/div&gt;<button class="ui right labeled icon button" ng-class="{'secondary':playground.hasChanges}" style="float:right" ng-click="playground.hasChanges=false;applyConstraints()"><i class="right arrow icon"></i>Applly</button></div>
+&lt;/div&gt;<button type="submit" class="ui right labeled icon button" ng-class="{'secondary':playground.hasChanges}" style="float:right"><i class="right arrow icon"></i>Applly</button></form>
 			</div>
 			<div class="four wide column">
 				<div id="play1" class="demo-container">
@@ -151,57 +151,6 @@
 				</div>
 			</div>
 		</div>
-		<script>
-		function playgroundCtrl ($scope, autolayout) {
-			var container = null, al = null, constraints = null;
-			$scope.applyConstraints = function () {
-				if (!container || !$scope.playground.constraints) return;
-				if (al) al.destroy();
-				al = autolayout(container);
-				angular.element(container).children().css({
-					top: '', left: '', width: '', height: ''
-				});
-				constraints = [];
-				if ($scope.playground
-					&& $scope.playground.newConstraint
-					&& $scope.playground.newConstraint.value
-					&& $scope.playground.newConstraint.value.trim()) {
-					$scope.playground.constraints.push(angular.copy($scope.playground.newConstraint));
-					$scope.playground.newConstraint = null;
-				}
-				for (var i = 0; i < $scope.playground.constraints.length; i++) {
-					var c = $scope.playground.constraints[i];
-					if (!c.value.trim()) continue;
-					try {
-						c.error = null;
-						constraints.push(c);
-						al.addConstraint(c.value.trim(), { align: c.align });
-					} catch (e) {
-						c.error = e;
-					}
-				}
-				$scope.playground.constraints = constraints;
-			};
-			var initialConstraintsStop = $scope.$watchCollection('playground.constraints', function (cs) {
-				if (!constraints) {
-					constraints = cs;
-					$scope.applyConstraints();
-					initialConstraintsStop();
-				}
-			});
-			$scope.$watch('playground.containerId', function (id) {
-				if (al) {
-					al.destroy();
-					al = null;
-				}
-				container = document.getElementById(id);
-				if (container) {
-					al = autolayout(container);
-					$scope.applyConstraints();
-				}
-			});
-		}
-		</script>
 	</section>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
@@ -214,6 +163,57 @@
 		for (var i = highlightCode.length - 1; i >= 0; i--) {
 			hljs.highlightBlock(highlightCode[i]);
 		};
+	</script>
+	<script>
+	function playgroundCtrl ($scope, autolayout) {
+		var container = null, al = null, constraints = null;
+		$scope.applyConstraints = function () {
+			if (!container || !$scope.playground.constraints) return;
+			if (al) al.destroy();
+			al = autolayout(container);
+			angular.element(container).children().css({
+				top: '', left: '', width: '', height: ''
+			});
+			constraints = [];
+			if ($scope.playground
+				&& $scope.playground.newConstraint
+				&& $scope.playground.newConstraint.value
+				&& $scope.playground.newConstraint.value.trim()) {
+				$scope.playground.constraints.push(angular.copy($scope.playground.newConstraint));
+				$scope.playground.newConstraint = null;
+			}
+			for (var i = 0; i < $scope.playground.constraints.length; i++) {
+				var c = $scope.playground.constraints[i];
+				if (!c.value.trim()) continue;
+				try {
+					c.error = null;
+					constraints.push(c);
+					al.addConstraint(c.value.trim(), { align: c.align });
+				} catch (e) {
+					c.error = e;
+				}
+			}
+			$scope.playground.constraints = constraints;
+		};
+		var initialConstraintsStop = $scope.$watchCollection('playground.constraints', function (cs) {
+			if (!constraints) {
+				constraints = cs;
+				$scope.applyConstraints();
+				initialConstraintsStop();
+			}
+		});
+		$scope.$watch('playground.containerId', function (id) {
+			if (al) {
+				al.destroy();
+				al = null;
+			}
+			container = document.getElementById(id);
+			if (container) {
+				al = autolayout(container);
+				$scope.applyConstraints();
+			}
+		});
+	}
 	</script>
 
 </body>
