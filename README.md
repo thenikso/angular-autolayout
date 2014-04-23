@@ -1,6 +1,6 @@
 # Autolayout for AngularJS
 
-[Constraint programmingg][1] layout paradigm for AngularJS web applications inspired by [Apple's Auto Layout][4] for iOS and OS X.
+[Constraint programming][1] layout paradigm for AngularJS web applications inspired by [Apple's Auto Layout][4] for iOS and OS X.
 
 Use constraint based layout to position HTML elements on a page using AngularJS.
 
