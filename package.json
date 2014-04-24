@@ -1,6 +1,6 @@
 {
 	"name": "angular-autolayout",
-	"version": "0.6.0",
+	"version": "0.6.1",
 	"repository": "https://github.com/thenikso/angular-autolayout",
 	"devDependencies": {
 		"grunt": "^0.4.4",
