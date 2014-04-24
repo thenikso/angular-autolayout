@@ -147,7 +147,7 @@ pre > code {
 }
 
 .solution-button {
-	position: absolute;
+	position: absolute !important;
 	right: 0.5em;
 	bottom: -1em;
 }

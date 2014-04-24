@@ -142,7 +142,7 @@
 		<div class="example ui two column stackable grid"
 			ng-init="playground.containerId = 'play1'; playground.constraints = [{align:'top', value:'|-[play1-A(==play1-B,==play1-C)]-[play1-B]-[play1-C]-|'}, {align:'right', value:'V:|-[play1-A(==play1-B,==play1-C)]-|'}]">
 			<div class="twelve wide column">
-				<form ng-submit="playground.hasChanges=false;applyConstraints()" class="highlight-code">&lt;div id="play1" class="demo-container" al-update-on-resize&gt;
+				<form ng-submit="playground.hasChanges=false;applyConstraints()" style="position:relative"><div class="highlight-code">&lt;div id="play1" class="demo-container" al-update-on-resize&gt;
   &lt;div id="play1-A" class="demo-box"&gt;A&lt;/div&gt;
   &lt;div id="play1-B" class="demo-box"&gt;B&lt;/div&gt;
   &lt;div id="play1-C" class="demo-box"&gt;C&lt;/div&gt;
@@ -153,7 +153,9 @@
 	</span>&lt;al-constraint align="<input type="text" ng-model="playground.newConstraint.align" style="width:5em" ng-change="playground.hasChanges=true">"&gt;
 		<input type="text" ng-model="playground.newConstraint.value" style="width:85%" ng-class="{'error':c.error}" ng-change="playground.hasChanges=true">
 	&lt;/al-constraint&gt;
-&lt;/div&gt;<button type="submit" class="ui right labeled icon button solution-button" ng-class="{'secondary':playground.hasChanges}"><i class="right arrow icon"></i>Apply</button></form>
+&lt;/div&gt;</div>
+				<button type="submit" class="ui right labeled icon button solution-button" ng-class="{'secondary':playground.hasChanges}"><i class="right arrow icon"></i>Apply</button>
+			</form>
 			</div>
 			<div class="four wide column">
 				<div id="play1" class="demo-container">
