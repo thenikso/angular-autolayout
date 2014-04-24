@@ -1,12 +1,17 @@
 # Autolayout for AngularJS
 
-[Constraint programming][1] layout paradigm for AngularJS web applications inspired by [Apple's Auto Layout][4] for iOS and OS X.
+[Constraint based][1] layout paradigm for AngularJS web applications inspired by [Apple's Auto Layout][4] for iOS and OS X.
 
-Use constraint based layout to position HTML elements on a page using AngularJS.
+HTML and CSS have been designed to present a page style layout like one that
+you might find on a newspaper. However, nowadays those technologies are also used
+to for layout of applications that should resemble native ones.
 
-This project uses [Cassowary.js constraint solver][2] which is an optimized javascript version of the
-[Cassowary hierarchical constraint toolkit][3]
-used by Apple at the core of Auto Layout.
+Many features that are needed to properly layout an application are missing from
+CSS. For example, there is no way to specify that two elements on a page should
+have the same height!
+
+With angular-autolayout, you can use the same layout technology that Apple gives
+to native iOS and OS X developers for your HTML5 app.
 
 ## Usage
 
