@@ -136,6 +136,7 @@ pre > code {
 	font-size: 2em;
 	padding: 0.2em 0.4em;
 	font-weight: bold;
+	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
