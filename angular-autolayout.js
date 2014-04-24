@@ -1505,9 +1505,11 @@ var l=this.rows.get(this._objective);l.setVariable(i,b.strength.symbolicWeight.v
     function (autolayout, $interpolate) {
       return {
         restrict: 'E',
-        priority: 400,
+        priority: 900,
         terminal: true,
         compile: function alConstraintCompile(element, attrs) {
+          // Support ng-if attribute
+          var ngIfExp = attrs.ngIf;
           // Collect constraint options
           var visualFormatText = (attrs.visualFormat || element.text()).trim(), visualFormat = visualFormatText && $interpolate(visualFormatText, true) || visualFormatText, visualFormatAlign = attrs.align && $interpolate(attrs.align, true) || attrs.align;
           var constraintOptionsObj = null, constraintOptions = null;
@@ -1539,70 +1541,98 @@ var l=this.rows.get(this._objective);l.setVariable(i,b.strength.symbolicWeight.v
           } else {
             description = JSON.stringify(constraintOptionsObj);
           }
+          if (ngIfExp) {
+            description += ' if: ' + ngIfExp;
+          }
           var comment = angular.element('<!-- al-constraint: ' + description + ' -->');
           element.after(comment);
           element.remove();
           return function alConstraintLink(scope, element, attrs) {
             var al = autolayout(element.parent());
-            var cs = null;
-            // Visual format constraint
-            if (visualFormat) {
-              if (angular.isFunction(visualFormat)) {
-                if (!angular.isFunction(visualFormatAlign)) {
-                  var visualFormatAlignText = visualFormatAlign;
-                  visualFormatAlign = function () {
-                    return visualFormatAlignText;
-                  };
+            if (!al) {
+              throw new Error('Unable to create autolayout from: ' + element.parent());
+            }
+            var createConstraints = function () {
+              var cs = null;
+              // Visual format constraint
+              if (visualFormat) {
+                if (angular.isFunction(visualFormat)) {
+                  if (!angular.isFunction(visualFormatAlign)) {
+                    var visualFormatAlignText = visualFormatAlign;
+                    visualFormatAlign = function () {
+                      return visualFormatAlignText;
+                    };
+                  }
+                  scope.$watch(function () {
+                    return JSON.stringify([
+                      visualFormat(scope),
+                      visualFormatAlign(scope)
+                    ]);
+                  }, function (params) {
+                    params = JSON.parse(params);
+                    if (cs) {
+                      al.removeConstraint(cs);
+                    }
+                    cs = al.addConstraint(params[0], { align: params[1] });
+                  });
+                } else if (angular.isFunction(visualFormatAlign)) {
+                  scope.$watch(function () {
+                    return visualFormatAlign(scope);
+                  }, function (align) {
+                    if (cs) {
+                      al.removeConstraint(cs);
+                    }
+                    cs = al.addConstraint(visualFormat, { align: align });
+                  });
+                } else {
+                  cs = al.addConstraint(visualFormat, { align: visualFormatAlign });
                 }
-                scope.$watch(function () {
-                  return JSON.stringify([
-                    visualFormat(scope),
-                    visualFormatAlign(scope)
-                  ]);
-                }, function (params) {
-                  params = JSON.parse(params);
-                  if (cs) {
-                    al.removeConstraint(cs);
-                  }
-                  cs = al.addConstraint(params[0], { align: params[1] });
-                });
-              } else if (angular.isFunction(visualFormatAlign)) {
-                scope.$watch(function () {
-                  return visualFormatAlign(scope);
-                }, function (align) {
-                  if (cs) {
-                    al.removeConstraint(cs);
-                  }
-                  cs = al.addConstraint(visualFormat, { align: align });
-                });
               } else {
-                cs = al.addConstraint(visualFormat, { align: visualFormatAlign });
-              }
-            } else {
-              var addConstraintFormOptions = function (constraintOptions) {
-                if (cs) {
-                  al.removeConstraint(cs);
-                }
-                constraintOptions.element = document.getElementById(constraintOptions.element);
-                constraintOptions.toElement = document.getElementById(constraintOptions.toElement);
-                cs = al.addConstraint(constraintOptions);
-              };
-              if (angular.isFunction(constraintOptions)) {
-                scope.$watch(function () {
-                  return constraintOptions(scope);
-                }, function (constraintOptions) {
-                  var constraintOptions = JSON.parse(constraintOptions);
-                  constraintOptions.multiplier = parseFloat(constraintOptions.multiplier) || 1;
-                  constraintOptions.constant = parseFloat(constraintOptions.constant) || 0;
-                  constraintOptions.priority = parseInt(constraintOptions.priority) || undefined;
+                var addConstraintFormOptions = function (constraintOptions) {
+                  if (cs) {
+                    al.removeConstraint(cs);
+                  }
+                  constraintOptions.element = document.getElementById(constraintOptions.element);
+                  constraintOptions.toElement = document.getElementById(constraintOptions.toElement);
+                  cs = al.addConstraint(constraintOptions);
+                };
+                if (angular.isFunction(constraintOptions)) {
+                  scope.$watch(function () {
+                    return constraintOptions(scope);
+                  }, function (constraintOptions) {
+                    var constraintOptions = JSON.parse(constraintOptions);
+                    constraintOptions.multiplier = parseFloat(constraintOptions.multiplier) || 1;
+                    constraintOptions.constant = parseFloat(constraintOptions.constant) || 0;
+                    constraintOptions.priority = parseInt(constraintOptions.priority) || undefined;
+                    addConstraintFormOptions(constraintOptions);
+                  });
+                } else {
                   addConstraintFormOptions(constraintOptions);
-                });
-              } else {
-                addConstraintFormOptions(constraintOptions);
+                }
               }
+              return cs;
+            };
+            // Manage constraints creation and removal
+            var cs = null;
+            if (ngIfExp) {
+              scope.$watch(ngIfExp, function (value) {
+                if (value && !cs) {
+                  // Allaw other conditional constraints to be removed
+                  scope.$evalAsync(function () {
+                    cs = createConstraints();
+                  });
+                } else if (cs) {
+                  al.removeConstraint(cs);
+                  cs = null;
+                }
+              });
+            } else {
+              cs = createConstraints();
             }
             scope.$on('$destroy', function () {
-              al.removeConstraint(cs);
+              if (cs) {
+                al.removeConstraint(cs);
+              }
             });
           };
         }

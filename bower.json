@@ -1,7 +1,7 @@
 {
 	"name": "angular-autolayout",
 	"main": "dist/angular-autolayout.js",
-	"version": "0.6.1",
+	"version": "0.6.2",
 	"authors": [
 		"Nicola Peduzzi <thenikso@gmail.com>"
 	],
