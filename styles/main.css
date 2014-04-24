@@ -68,6 +68,7 @@ pre > code {
 	background-image: url(../images/bg.jpg);
 	color: white;
 	padding: 3em 1em;
+	overflow: hidden;
 }
 
 #site-header {
