@@ -38,6 +38,8 @@ pre > code {
 .highlight-code {
 	white-space: pre;
 	font-family: monospace;
+	overflow: auto;
+	position: relative;
 }
 
 .highlight-code input {
@@ -144,7 +146,7 @@ pre > code {
 	background: #ccc;
 }
 
-.demo-container .solution-button {
+.solution-button {
 	position: absolute;
 	right: 0.5em;
 	bottom: -1em;
