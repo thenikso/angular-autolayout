@@ -235,7 +235,7 @@ Building the project will generate a packaged `angular-autolayout.js` and it's m
 
 ## Participate
 
-This project uses [Cassoway.js][2] and [PEG][6], any contribution to those projects will help this project too.
+This project uses [Cassowary.js][2] and [PEG][6], any contribution to those projects will help this project too.
 
 The first thing you could do to partecipate to `angular-autolayout` is to use it in your project. By doing that you'll be more likely to find fixes or improvements that may be needed.
 
