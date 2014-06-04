@@ -28,9 +28,9 @@
 		provider.autolayoutInstanceDataKey = '$autolayout';
 		provider.autolayoutChildElementExpressionsDataKey = '$autolayoutExpressions';
 		provider.autolayoutContainerElementExpressionsDataKey = '$autolayoutContainerExpressions';
-		provider.__defineGetter__('varUID', function() {
+		provider.varUID = function() {
 			return 'v' + _varUID++;
-		});
+		};
 
 		provider.relations = {
 			equal: function(a, b, priority) {
@@ -67,7 +67,7 @@
 				create: function(el, contEl, solver) {
 					var topValue = el.getBoundingClientRect().top - contEl.getBoundingClientRect().top;
 					var topExp = new c.Variable({
-						name: (el.id || provider.varUID) + '.top',
+						name: (el.id || provider.varUID()) + '.top',
 						value: topValue
 					});
 					if (el == contEl) {
@@ -83,7 +83,7 @@
 				create: function(el, contEl, solver) {
 					var leftValue = el.getBoundingClientRect().left - contEl.getBoundingClientRect().left;
 					var leftExp = new c.Variable({
-						name: (el.id || provider.varUID) + '.left',
+						name: (el.id || provider.varUID()) + '.left',
 						value: leftValue
 					});
 					if (el == contEl) {
@@ -99,7 +99,7 @@
 				create: function(el, contEl, solver) {
 					var widthValue = el.getBoundingClientRect().width;
 					var widthExp = new c.Variable({
-						name: (el.id || provider.varUID) + '.width',
+						name: (el.id || provider.varUID()) + '.width',
 						value: widthValue
 					});
 					if (el == contEl) {
@@ -123,7 +123,7 @@
 				create: function(el, contEl, solver) {
 					var heightValue = el.getBoundingClientRect().height;
 					var heightExp = new c.Variable({
-						name: (el.id || provider.varUID) + '.height',
+						name: (el.id || provider.varUID()) + '.height',
 						value: heightValue
 					});
 					if (el == contEl) {
