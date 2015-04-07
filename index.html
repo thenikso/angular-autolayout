@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="playgroundApp">
 <head>
 	<meta name="viewport" content="width=device-width">
 	<title>Angular-Autolayout - A constraint based layout system for AngularJS</title>
@@ -254,7 +254,7 @@
 		</p>
 	</footer>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
 	<script src="scripts/angular-autolayout.min.js"></script>
 	<script>
@@ -266,60 +266,66 @@
 		};
 	</script>
 	<script>
-	function playgroundCtrl ($scope, autolayout) {
-		var container = null, al = null, constraints = null;
-		$scope.applyConstraints = function () {
-			if (!container || !$scope.playground.constraints) return;
-			if (al) al.destroy();
-			al = autolayout(container);
-			angular.element(container).children().css({
-				top: '', left: '', width: '', height: ''
-			});
-			constraints = [];
-			if ($scope.playground
-				&& $scope.playground.newConstraint
-				&& $scope.playground.newConstraint.value
-				&& $scope.playground.newConstraint.value.trim()) {
-				$scope.playground.constraints.push(angular.copy($scope.playground.newConstraint));
-				$scope.playground.newConstraint = null;
-			}
-			for (var i = 0; i < $scope.playground.constraints.length; i++) {
-				var c = $scope.playground.constraints[i];
-				if (!c.value.trim()) continue;
-				try {
-					c.error = null;
-					constraints.push(c);
-					al.addConstraint(c.value.trim(), { align: c.align });
-				} catch (e) {
-					c.error = e;
-				}
-			}
-			$scope.playground.constraints = constraints;
-		};
-		$scope.suggestSolution = function (sol) {
-			$scope.playground.constraints = sol;
-			$scope.applyConstraints();
-			document.getElementById('playground').scrollIntoView(true);
-		};
-		var initialConstraintsStop = $scope.$watchCollection('playground.constraints', function (cs) {
-			if (!constraints) {
-				constraints = cs;
-				$scope.applyConstraints();
-				initialConstraintsStop();
-			}
-		});
-		$scope.$watch('playground.containerId', function (id) {
-			if (al) {
-				al.destroy();
-				al = null;
-			}
-			container = document.getElementById(id);
-			if (container) {
+	(function () {
+		angular.module('playgroundApp', [
+			'autolayout'
+		]).controller('playgroundCtrl', playgroundCtrl);
+
+		function playgroundCtrl ($scope, autolayout) {
+			var container = null, al = null, constraints = null;
+			$scope.applyConstraints = function () {
+				if (!container || !$scope.playground.constraints) return;
+				if (al) al.destroy();
 				al = autolayout(container);
+				angular.element(container).children().css({
+					top: '', left: '', width: '', height: ''
+				});
+				constraints = [];
+				if ($scope.playground
+					&& $scope.playground.newConstraint
+					&& $scope.playground.newConstraint.value
+					&& $scope.playground.newConstraint.value.trim()) {
+					$scope.playground.constraints.push(angular.copy($scope.playground.newConstraint));
+					$scope.playground.newConstraint = null;
+				}
+				for (var i = 0; i < $scope.playground.constraints.length; i++) {
+					var c = $scope.playground.constraints[i];
+					if (!c.value.trim()) continue;
+					try {
+						c.error = null;
+						constraints.push(c);
+						al.addConstraint(c.value.trim(), { align: c.align });
+					} catch (e) {
+						c.error = e;
+					}
+				}
+				$scope.playground.constraints = constraints;
+			};
+			$scope.suggestSolution = function (sol) {
+				$scope.playground.constraints = sol;
 				$scope.applyConstraints();
-			}
-		});
-	}
+				document.getElementById('playground').scrollIntoView(true);
+			};
+			var initialConstraintsStop = $scope.$watchCollection('playground.constraints', function (cs) {
+				if (!constraints) {
+					constraints = cs;
+					$scope.applyConstraints();
+					initialConstraintsStop();
+				}
+			});
+			$scope.$watch('playground.containerId', function (id) {
+				if (al) {
+					al.destroy();
+					al = null;
+				}
+				container = document.getElementById(id);
+				if (container) {
+					al = autolayout(container);
+					$scope.applyConstraints();
+				}
+			});
+		}
+	})();
 	</script>
 
 </body>
