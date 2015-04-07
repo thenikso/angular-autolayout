@@ -1,7 +1,7 @@
 {
 	"name": "angular-autolayout",
 	"main": "dist/angular-autolayout.js",
-	"version": "0.6.2",
+	"version": "0.6.4",
 	"authors": [
 		"Nicola Peduzzi <thenikso@gmail.com>"
 	],
@@ -25,10 +25,10 @@
 		"src"
 	],
 	"dependencies": {
-		"angular": "~1.2.16"
+		"angular": "~1.3"
 	},
 	"devDependencies": {
-		"angular-mocks": "~1.2.16",
-		"chai": "~1.9.1"
+		"angular-mocks": "~1.3",
+		"chai": "~2"
 	}
 }
