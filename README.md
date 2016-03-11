@@ -37,7 +37,7 @@ You can now use the `al-constraint` directive to add layout constraints with bot
 		<div id="myRightBox">Layout!</div>
 
 		<al-constraint align="top">|-[myLeftBox(==myRightBox)]-[myRightBox]-|</al-constraint>
-		<al-constriant>V:|-[myLeftBox]-|</al-constraint>
+		<al-constraint>V:|-[myLeftBox]-|</al-constraint>
 		<al-constraint
 			element="myLeftBox"
 			attribute="height"
@@ -78,13 +78,13 @@ The `al-constraint` is the core directive that will add layout constraints to it
 It can be used with both visual language format constraints:
 
 ```
-<al-constriant visual-format="V:|-[myDiv]-|"></al-constraint>
+<al-constraint visual-format="V:|-[myDiv]-|"></al-constraint>
 ```
 
 or equivalent:
 
 ```
-<al-constriant>V:|-[myDiv]-|</al-constraint>
+<al-constraint>V:|-[myDiv]-|</al-constraint>
 ```
 
 Or it can be used in a form that will map to the programmatic API:
