@@ -223,7 +223,7 @@ bower install
 
 ### Run tests
 
-There are a number of [Karma](http://karma-runner.github.io/0.12/index.html) based unit tests using [Mocha](http://visionmedia.github.io/mocha/), [Chai](http://chaijs.com/) and [Sinon](http://sinonjs.org/). To run them use:
+There are a number of [Karma](http://karma-runner.github.io/0.12/index.html) based unit tests using [Mocha](http://mochajs.org/), [Chai](http://chaijs.com/) and [Sinon](http://sinonjs.org/). To run them use:
 
 `grunt test`
 
